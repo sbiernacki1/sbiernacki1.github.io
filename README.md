@@ -70,7 +70,6 @@ A still can also load from where it was minted, with an https link as its `src`:
 owners chose a GIF version of their work, and those show that way, filling the square.
 A moving work too heavy to show as minted plays as a silent, looping video of the same frames,
 with its first frame as the poster: Deathbed's minted GIF is 188 MB, and its video is about 3.5 MB.
-The page says so in its record lines.
 
 ## Adding a work
 
