@@ -95,6 +95,15 @@ The table at the top of `hand.js` lists those drawings and is generated from the
 is noted in the comment). If the font is updated, regenerate the table along with the font file,
 and leave the digit 1 out of it: only its default drawing has a flag, and the others read as an l.
 
+## Light and dark
+
+The site follows the visitor's device: light by day, dark if their phone or computer is set to dark.
+The word at the right end of the header (Dark, or Light) lets them choose instead, and `assets/theme.js`
+keeps that choice in their own browser so it holds from page to page; nothing is sent. A one-line script
+in each page's head applies a saved choice before anything is drawn. The colors live at the top of
+`assets/site.css`: in the dark, the paper takes the ink's color and the ink a softened paper, amber stays
+amber, and the artworks are never changed.
+
 ## Fonts
 
 - Stephen Hand — © Stephen Biernacki. Not licensed for reuse.

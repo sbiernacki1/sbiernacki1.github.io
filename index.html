@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Stephen Biernacki</title>
 <meta name="description" content="Mechanisms built around feelings. Two decades and counting in marketing — the business of being seen — but the art goes the other way.">
-<meta name="theme-color" content="#FAFAF8">
-<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FAFAF8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1C1B18" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Stephen Biernacki">
 <meta property="og:title" content="Stephen Biernacki">
@@ -21,14 +22,15 @@
 <link rel="preload" href="assets/fonts/StephenHand-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/FragmentMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/site.css">
-<script>document.documentElement.classList.add("js")</script>
+<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 </head>
 <body>
 <div class="wrap">
-<a class="skip" href="#main">Skip to content</a><header class="pair site-head"><p class="m name"><a href="./">Stephen Biernacki</a></p><nav class="f" aria-label="Site"><ul class="nav"><li><a class="quiet" href="works/">Works</a></li><li><a class="quiet" href="statement/">Statement</a></li><li><a class="quiet" href="elsewhere/">Elsewhere</a></li></ul></nav></header>
+<a class="skip" href="#main">Skip to content</a><header class="pair site-head"><p class="m name"><a href="./">Stephen Biernacki</a></p><nav class="f" aria-label="Site"><ul class="nav"><li><a class="quiet" href="works/">Works</a></li><li><a class="quiet" href="statement/">Statement</a></li><li><a class="quiet" href="elsewhere/">Elsewhere</a></li></ul></nav><button type="button" class="theme-toggle"><span class="to-dark">Dark</span><span class="to-light">Light</span></button></header>
 <main id="main" class="home"><h1 class="vh">Stephen Biernacki</h1><div class="pair"><p class="f hand bio">Stephen Biernacki is a conceptual artist in Pennsylvania. He has spent more than two decades in marketing, the business of being seen. His art faces the other way, toward what goes unwatched and unexplained. Many of his pieces are mechanisms built around feelings, written in code and running on real time, specific dates, sound, attention, or participation. Some reveal more to whoever gives more, and some keep their answers to themselves.</p></div><nav class="pair pager" aria-label="Next"><div class="f"><a href="works/"><span class="lbl">Next</span><span class="hand">Works</span></a></div></nav></main>
 <footer class="pair site-foot"><p class="m">This site does not track you.</p></footer>
 </div>
+<script src="assets/theme.js"></script>
 <script src="assets/hand.js"></script>
 </body>
 </html>

@@ -21,6 +21,7 @@
   --pencil: #66645E;
   --amber: #D4A934;
   --rule: #E2E0DA;
+  --well: #1C1B18;   /* behind a work while it loads */
 
   --hand: "Stephen Hand", ui-rounded, system-ui, sans-serif;
   --mono: "Fragment Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
@@ -35,6 +36,28 @@
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 *, *::before, *::after { box-sizing: inherit; }
+
+/* Night: the same ledger with the lights down. The paper takes the ink's color, the ink takes a softened
+   paper, and amber stays amber. It follows the device until a visitor chooses with the Dark/Light word
+   in the header (theme.js). The artworks never change. Keep these two blocks the same. */
+:root[data-theme="dark"] {
+  --paper: #1C1B18;
+  --ink: #E7E4DD;
+  --pencil: #9C988F;
+  --rule: #36332E;
+  --well: #121110;
+  color-scheme: dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1C1B18;
+    --ink: #E7E4DD;
+    --pencil: #9C988F;
+    --rule: #36332E;
+    --well: #121110;
+    color-scheme: dark;
+  }
+}
 
 html {
   background: var(--paper);
@@ -113,13 +136,44 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .nav { display: flex; flex-wrap: wrap; column-gap: 1.35rem; row-gap: 0.25rem; }
 .nav a { color: var(--ink); }
 
+/* The Dark/Light word sits at the far end of the header's first line, apart from the pages: on a phone
+   beside the name, on a wide screen past the menu. It shows only when the script that runs it can. */
+.site-head { grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.35rem; align-items: baseline; }
+.site-head > .name { grid-column: 1; grid-row: 1; }
+.site-head > nav { grid-column: 1 / -1; grid-row: 2; }
+.theme-toggle {
+  grid-column: 2; grid-row: 1; justify-self: end;
+  display: none; font: inherit; color: var(--pencil); background: none; border: 0; border-radius: 0;
+  padding: 0.6rem; margin: -0.6rem;   /* a thumb-sized target, the same look */
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  text-decoration-line: underline; text-decoration-color: transparent; text-decoration-thickness: 0.125em;
+  text-underline-offset: 0.24em; text-decoration-skip-ink: none;
+}
+.js .theme-toggle { display: inline-block; }
+@media (hover: hover) {
+  .theme-toggle:hover { color: var(--ink); text-decoration-color: var(--amber); text-decoration-thickness: 0.3em; }
+}
+.theme-toggle:focus-visible { color: var(--ink); text-decoration-color: var(--amber); outline: 2px solid var(--ink); outline-offset: -0.1rem; }
+.theme-toggle .to-light { display: none; }
+:root[data-theme="dark"] .theme-toggle .to-dark { display: none; }
+:root[data-theme="dark"] .theme-toggle .to-light { display: inline; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .theme-toggle .to-dark { display: none; }
+  :root:not([data-theme="light"]) .theme-toggle .to-light { display: inline; }
+}
+@media (min-width: 60rem) {
+  .site-head { grid-template-columns: var(--margin-col) minmax(0, 1fr) auto; column-gap: var(--gap); }
+  .site-head > nav { grid-column: 2; grid-row: 1; }
+  .theme-toggle { grid-column: 3; }
+}
+
 .site-foot { margin-top: clamp(5rem, 12vw, 9rem); }
 @media (min-width: 60rem) { .site-foot > .m { grid-column: 1 / -1; } }
 
 /* ---------- media: live embeds and stills, or visible placeholders ---------- */
 .media { width: min(100%, calc(74vh * var(--arn, 1.3333))); aspect-ratio: var(--ar, 4 / 3); }
 /* every framed work gets the same hairline as the viewers; --media-bg suits a light work while it loads */
-.media iframe, .media img, .media video { display: block; width: 100%; height: 100%; border: 1px solid var(--rule); object-fit: contain; background: var(--media-bg, var(--ink)); }
+.media iframe, .media img, .media video { display: block; width: 100%; height: 100%; border: 1px solid var(--rule); object-fit: contain; background: var(--media-bg, var(--well)); }
 /* a video's frame always has the video's own shape, so "fill" scales it exactly as "contain" would,
    without the pixel of background some browsers leave at the right edge */
 .media video, .series-video { object-fit: fill; }
@@ -163,9 +217,9 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .series { margin-top: clamp(1.75rem, 5vw, 3rem); max-width: 60rem; width: min(100%, calc(74vh * var(--arn, 100))); }
 .series-frame { position: relative; aspect-ratio: var(--frame, 16 / 10); }
 .series-live, .series-frame .ph { position: absolute; inset: 0; width: 100%; height: 100%; }
-.series-live { display: block; border: 1px solid var(--rule); background: var(--live-bg, var(--ink)); }
+.series-live { display: block; border: 1px solid var(--rule); background: var(--live-bg, var(--well)); }
 .series-img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); cursor: pointer; }
-.series-video { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--ink); cursor: pointer; }
+.series-video { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--well); cursor: pointer; }
 /* the button keeps its place under the frame's right edge, however long the title runs */
 .series-note { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: 1.25rem; }
 .series-next { display: none; font: inherit; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer;

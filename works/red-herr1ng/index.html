@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>RED HERR1NG — Stephen Biernacki</title>
 <meta name="description" content="221 unique expressions of affirmation, love, support, empathy, and understanding.">
-<meta name="theme-color" content="#FAFAF8">
-<meta name="color-scheme" content="light">
+<meta name="theme-color" content="#FAFAF8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#1C1B18" media="(prefers-color-scheme: dark)">
+<meta name="color-scheme" content="light dark">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Stephen Biernacki">
 <meta property="og:title" content="RED HERR1NG — Stephen Biernacki">
@@ -21,11 +22,11 @@
 <link rel="preload" href="../../assets/fonts/StephenHand-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="../../assets/fonts/FragmentMono-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="../../assets/site.css">
-<script>document.documentElement.classList.add("js")</script>
+<script>document.documentElement.classList.add("js");try{var t=localStorage.getItem("theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 </head>
 <body>
 <div class="wrap">
-<a class="skip" href="#main">Skip to content</a><header class="pair site-head"><p class="m name"><a href="../../">Stephen Biernacki</a></p><nav class="f" aria-label="Site"><ul class="nav"><li><a class="quiet" href="../../works/" aria-current="page">Works</a></li><li><a class="quiet" href="../../statement/">Statement</a></li><li><a class="quiet" href="../../elsewhere/">Elsewhere</a></li></ul></nav></header>
+<a class="skip" href="#main">Skip to content</a><header class="pair site-head"><p class="m name"><a href="../../">Stephen Biernacki</a></p><nav class="f" aria-label="Site"><ul class="nav"><li><a class="quiet" href="../../works/" aria-current="page">Works</a></li><li><a class="quiet" href="../../statement/">Statement</a></li><li><a class="quiet" href="../../elsewhere/">Elsewhere</a></li></ul></nav><button type="button" class="theme-toggle"><span class="to-dark">Dark</span><span class="to-light">Light</span></button></header>
 <main id="main">
 <article class="work">
   <h1 class="hand work-title">RED HERR1NG</h1>
@@ -38,6 +39,7 @@
 </main>
 <footer class="pair site-foot"><p class="m">This site does not track you.</p></footer>
 </div>
+<script src="../../assets/theme.js"></script>
 <script src="../../assets/hand.js"></script>
 <script src="../../assets/series.js"></script>
 </body>
