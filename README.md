@@ -104,6 +104,14 @@ in each page's head applies a saved choice before anything is drawn. The colors 
 `assets/site.css`: in the dark, the paper takes the ink's color and the ink a softened paper, amber stays
 amber, and the artworks are never changed.
 
+## Share cards
+
+When a work's page is shared, on X or in a message, the card shows the work: `assets/share/<page>.jpg`,
+1200 × 630, the whole artwork on the paper color beside its title in the hand, never cropped. Moving works
+use one clear frame. Work pages are titled "Deathbed by Stephen Biernacki". The live works with no still
+here (Alien Invasion of Privacy, Vestige, Self-Addressed, UNBECOMING, Untitled (For Jo)) use the site's
+own card, `assets/og.png`, until they have one.
+
 ## Fonts
 
 - Stephen Hand — © Stephen Biernacki. Not licensed for reuse.
