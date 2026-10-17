@@ -202,8 +202,12 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 
 .pager { margin-top: clamp(3.5rem, 8vw, 6rem); }
 .pager .f { display: flex; flex-wrap: wrap; gap: 1.1rem 3rem; }
-.pager a { text-decoration-color: transparent; }
-.pager a:hover, .pager a:focus-visible { text-decoration-color: var(--amber); }
+/* only the destination is underlined, never the Previous/Next label, and only on hover or focus,
+   like the titles on the Works list */
+.pager a { text-decoration: none; }
+.pager a .hand { text-decoration-line: underline; text-decoration-color: transparent; text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.2em; text-decoration-skip-ink: none; }
+.pager a:hover .hand, .pager a:focus-visible .hand { text-decoration-color: var(--amber); text-decoration-thickness: 0.16em; }
 .pager .lbl { display: block; color: var(--pencil); }
 .pager .hand { font-size: 1.6rem; line-height: 1.3; }
 
