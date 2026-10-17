@@ -1,0 +1,257 @@
+/* Stephen Biernacki — site.css
+   The hand writes; the machine records.
+   Stephen Hand carries everything he would say. Fragment Mono carries what a machine would log:
+   years, specs, links, navigation. Amber appears on links only. The artworks are the only images
+   and the only motion. */
+
+@font-face {
+  font-family: "Stephen Hand";
+  src: url("fonts/StephenHand-Regular.woff2") format("woff2");
+  font-display: block;
+}
+@font-face {
+  font-family: "Fragment Mono";
+  src: url("fonts/FragmentMono-Regular.woff2") format("woff2");
+  font-display: swap;
+}
+
+:root {
+  --paper: #FAFAF8;
+  --ink: #1C1B18;
+  --pencil: #66645E;
+  --amber: #D4A934;
+  --rule: #E2E0DA;
+
+  --hand: "Stephen Hand", ui-rounded, system-ui, sans-serif;
+  --mono: "Fragment Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  --pad: clamp(1.25rem, 5.5vw, 5rem);
+  --margin-col: 14.5rem;
+  --gap: clamp(2rem, 4.5vw, 5rem);
+
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+*, *::before, *::after { box-sizing: inherit; }
+
+html {
+  background: var(--paper);
+  color: var(--ink);
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  line-height: 1.6;
+}
+h1, h2, h3, p, ul, ol, figure, blockquote { margin: 0; padding: 0; font-weight: 400; font-size: inherit; }
+ul, ol { list-style: none; }
+img, iframe { display: block; max-width: 100%; }
+
+.hand { font-family: var(--hand); }
+.mono { font-family: var(--mono); }
+
+/* ---------- links: ink text, amber underline ---------- */
+a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: var(--amber);
+  text-decoration-thickness: 0.125em;
+  text-underline-offset: 0.24em;
+  text-decoration-skip-ink: none;
+}
+a:hover { text-decoration-thickness: 0.3em; }
+a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+.hand a, a.hand { text-decoration-thickness: 0.07em; text-underline-offset: 0.2em; }
+.hand a:hover, a.hand:hover { text-decoration-thickness: 0.16em; }
+
+/* quiet links: underline appears on hover, focus, or when current */
+.quiet { text-decoration-color: transparent; }
+.quiet:hover, .quiet:focus-visible, .quiet[aria-current="page"] { text-decoration-color: var(--amber); }
+
+.skip {
+  position: absolute; left: var(--pad); top: -4rem;
+  background: var(--paper); padding: 0.5rem 0.75rem; z-index: 10;
+}
+.skip:focus { top: calc(env(safe-area-inset-top, 0px) + 0.75rem); }
+
+.vh, .hw-sr {
+  position: absolute !important;
+  width: 1px; height: 1px; margin: -1px; padding: 0; border: 0;
+  overflow: hidden; clip: rect(0 0 0 0); clip-path: inset(50%);
+  white-space: nowrap;
+}
+.vh, .hw-sr { -webkit-user-select: none; user-select: none; }
+
+/* ---------- the ledger: a margin for the machine, a field for the hand ---------- */
+.wrap {
+  max-width: 92rem;
+  padding: clamp(1.25rem, 3.5vw, 2.5rem) var(--pad) clamp(2.5rem, 6vw, 4.5rem);
+}
+.pair { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 0.4rem; }
+@media (min-width: 60rem) {
+  .pair { grid-template-columns: var(--margin-col) minmax(0, 1fr); column-gap: var(--gap); align-items: baseline; }
+  .pair > .m { grid-column: 1; grid-row: 1; }
+  .pair > .f { grid-column: 2; grid-row: 1; }
+  .pair.top { align-items: start; }
+}
+.m { color: var(--pencil); }
+.m a { color: var(--ink); }
+
+/* ---------- header and footer ---------- */
+.site-head { row-gap: 0.15rem; }
+.name { color: var(--ink); }
+.name a { text-decoration-color: transparent; }
+.name a:hover, .name a:focus-visible { text-decoration-color: var(--amber); }
+.nav { display: flex; flex-wrap: wrap; column-gap: 1.35rem; row-gap: 0.25rem; }
+.nav a { color: var(--ink); }
+
+.site-foot { margin-top: clamp(5rem, 12vw, 9rem); }
+@media (min-width: 60rem) { .site-foot > .m { grid-column: 1 / -1; } }
+
+/* ---------- media: live embeds and stills, or visible placeholders ---------- */
+.media { width: min(100%, calc(74vh * var(--arn, 1.3333))); aspect-ratio: var(--ar, 4 / 3); }
+/* every framed work gets the same hairline as the viewers; --media-bg suits a light work while it loads */
+.media iframe, .media img, .media video { display: block; width: 100%; height: 100%; border: 1px solid var(--rule); object-fit: contain; background: var(--media-bg, var(--ink)); }
+/* a video's frame always has the video's own shape, so "fill" scales it exactly as "contain" would,
+   without the pixel of background some browsers leave at the right edge */
+.media video, .series-video { object-fit: fill; }
+.ph {
+  display: grid; place-items: center;
+  width: 100%; height: 100%;
+  border: 1px dashed var(--pencil);
+  color: var(--pencil);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  padding: 1.25rem;
+  text-align: center;
+}
+.ph-inline { color: var(--pencil); font-family: var(--mono); }
+/* pixel art keeps hard edges at any size */
+.pixelated { image-rendering: pixelated; }
+
+/* ---------- works index ---------- */
+.index { margin-top: clamp(3rem, 9vw, 6.5rem); }
+.entry + .entry { margin-top: clamp(1.4rem, 3.2vw, 2.25rem); }
+.entry .f { font-size: clamp(2.1rem, 4.6vw, 3.4rem); line-height: 1.2; }
+.entry .m { margin-top: 0.1rem; }
+
+/* the rest of the record: logged, not written */
+.also { margin-top: clamp(3.5rem, 9vw, 6.5rem); }
+.also-list { margin-top: 0.9rem; }
+.also-entry { row-gap: 0.1rem; }
+.also-entry + .also-entry { margin-top: 1rem; }
+.also-entry .f { font-size: 1rem; line-height: 1.5; }
+
+/* ---------- a work ---------- */
+.work { margin-top: clamp(3rem, 8vw, 6rem); display: grid; grid-template-columns: minmax(0, 1fr); }
+.work-title { font-size: clamp(2.75rem, 7.5vw, 5.5rem); line-height: 1.12; text-wrap: balance; }
+.work-meta { margin-top: 1.1rem; }
+.spec li, .ext li { line-height: 1.7; }
+.ext { margin-top: 0.9rem; }
+.work .media { margin-top: clamp(1.75rem, 5vw, 3rem); }
+.media-note { margin-top: 0.6rem; color: var(--pencil); }
+/* a series: one work at a time, in order, opening on any of them */
+/* a series that gives its shape (--arn, width over height) stays within 74% of the screen's height */
+.series { margin-top: clamp(1.75rem, 5vw, 3rem); max-width: 60rem; width: min(100%, calc(74vh * var(--arn, 100))); }
+.series-frame { position: relative; aspect-ratio: var(--frame, 16 / 10); }
+.series-live, .series-frame .ph { position: absolute; inset: 0; width: 100%; height: 100%; }
+.series-live { display: block; border: 1px solid var(--rule); background: var(--live-bg, var(--ink)); }
+.series-img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); cursor: pointer; }
+.series-video { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--ink); cursor: pointer; }
+/* the button keeps its place under the frame's right edge, however long the title runs */
+.series-note { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: 1.25rem; }
+.series-next { display: none; font: inherit; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer;
+  text-decoration-line: underline; text-decoration-color: var(--amber); text-decoration-thickness: 0.125em; text-underline-offset: 0.24em; }
+.js .series-next { display: inline; }
+.js .series-next[hidden] { display: none; }
+.series-next:hover { text-decoration-thickness: 0.3em; }
+.series-next:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+.js .series:not(.is-ready) .series-title { visibility: hidden; }
+.work .prose { margin-top: clamp(2rem, 5vw, 3.25rem); }
+.record { margin-top: 2.25rem; color: var(--pencil); }
+.record p + p { margin-top: 0.15rem; }
+@media (min-width: 60rem) {
+  .work { grid-template-columns: var(--margin-col) minmax(0, 1fr); column-gap: var(--gap); }
+  .work > * { grid-column: 2; }
+  .work > .work-meta {
+    grid-column: 1; grid-row: 1 / span 6;
+    margin-top: 0; align-self: start;
+    position: sticky; top: calc(env(safe-area-inset-top, 0px) + 2rem);
+    padding-top: 0.6rem;
+  }
+}
+
+/* ---------- prose in the hand ---------- */
+.prose { font-family: var(--hand); font-size: clamp(1.3125rem, 1.25rem + 0.25vw, 1.4375rem); line-height: 1.7; max-width: 34em; text-wrap: pretty; }
+.prose p + p, .prose p + ul, .prose ul + p, .prose blockquote + p, .prose p + blockquote { margin-top: 0.95em; }
+.prose h2 { font-size: 1.55em; line-height: 1.25; margin-top: 1.7em; margin-bottom: 0.35em; }
+.prose .sep { margin-top: 1.4em; }
+.prose .sep + h2 { margin-top: 0.4em; }
+.prose blockquote { margin-left: 1.4em; }
+.prose li { line-height: 1.6; padding-left: 0.8em; text-indent: -0.8em; }
+.prose .url { font-size: 0.62em; overflow-wrap: anywhere; }
+.prose h2 + p { margin-top: 0; }
+
+.pager { margin-top: clamp(3.5rem, 8vw, 6rem); }
+.pager .f { display: flex; flex-wrap: wrap; gap: 1.1rem 3rem; }
+.pager a { text-decoration-color: transparent; }
+.pager a:hover, .pager a:focus-visible { text-decoration-color: var(--amber); }
+.pager .lbl { display: block; color: var(--pencil); }
+.pager .hand { font-size: 1.6rem; line-height: 1.3; }
+
+/* ---------- statement ---------- */
+.statement { margin-top: clamp(3rem, 8vw, 6rem); }
+.st-lead { font-size: clamp(1.5rem, 7.6vw, 3.2rem); line-height: 1.28; }
+.st-lead > span { display: block; }
+.st-intro { margin-top: clamp(2.5rem, 6vw, 4rem); }
+.movement { margin-top: clamp(2.75rem, 6vw, 4.25rem); }
+.numeral { color: var(--pencil); }
+.mv-title { font-family: var(--hand); font-size: clamp(1.75rem, 3.6vw, 2.75rem); line-height: 1.2; }
+.movement .prose { margin-top: 0.6rem; }
+
+/* ---------- home: the bio, in his hand ---------- */
+.home { margin-top: clamp(3.5rem, 11vh, 8rem); }
+.bio { font-family: var(--hand); font-size: clamp(1.4rem, 1.15rem + 1.1vw, 2.15rem); line-height: 1.6; max-width: 26em; text-wrap: pretty; }
+
+/* ---------- elsewhere: social first, then the art platforms ---------- */
+.elsewhere { margin-top: clamp(3rem, 9vw, 6.5rem); }
+.group + .group { margin-top: clamp(3.5rem, 9vw, 6rem); }
+.group .index { margin-top: 0.9rem; }
+.elsewhere .entry { row-gap: 0; }
+.elsewhere .entry + .entry { margin-top: clamp(1.5rem, 3vw, 2.1rem); }
+.elsewhere .entry .f { font-size: clamp(2rem, 4.2vw, 3rem); line-height: 1.15; }
+.elsewhere .entry .m { overflow-wrap: anywhere; }
+
+/* ---------- not found ---------- */
+.lost { margin-top: clamp(4.5rem, 16vh, 11rem); }
+.lost h1 { font-family: var(--hand); font-size: clamp(2.75rem, 7.5vw, 5.5rem); line-height: 1.15; }
+.lost p { margin-top: 1.5rem; }
+
+@media (min-width: 60rem) {
+  body { font-size: 0.875rem; }
+}
+
+/* ---------- the hand, written fresh on every visit (see hand.js) ---------- */
+.hw-ink span { font-feature-settings: "calt" 0; }
+.hw-ink .hw-keep { white-space: nowrap; }
+.hw-ink .v1 { font-feature-settings: "calt" 0, "ss01" 1; }
+.hw-ink .v2 { font-feature-settings: "calt" 0, "ss02" 1; }
+.hw-ink .v3 { font-feature-settings: "calt" 0, "ss03" 1; }
+.hw-ink .v4 { font-feature-settings: "calt" 0, "ss04" 1; }
+.hw-ink .v5 { font-feature-settings: "calt" 0, "ss05" 1; }
+.hw-ink .v6 { font-feature-settings: "calt" 0, "ss06" 1; }
+.hw-ink .v7 { font-feature-settings: "calt" 0, "ss07" 1; }
+.hw-ink .v8 { font-feature-settings: "calt" 0, "ss08" 1; }
+.hw-ink .v9 { font-feature-settings: "calt" 0, "ss09" 1; }
+
+/* Hold the hand until it has been written, so nothing visibly changes. Failsafe if the script never runs. */
+.js .hand:not(.is-written) { visibility: hidden; animation: hw-failsafe 0s linear 2.5s forwards; }
+@keyframes hw-failsafe { to { visibility: visible; } }
