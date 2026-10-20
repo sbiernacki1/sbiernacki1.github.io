@@ -6,15 +6,15 @@ Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige
 ## Put it online (GitHub Pages + stephenbiernacki.com)
 
 1. Repository `sbiernacki1.github.io` (public) holds these files at its root, with `index.html` at the top level.
-   The site has 310 files, and GitHub's upload page takes fewer than 100 at a time. GitHub Desktop
+   The site has 386 files, and GitHub's upload page takes fewer than 100 at a time. GitHub Desktop
    (desktop.github.com) has no limit: clone the repository, copy everything in this folder into the
    clone, then Commit to main and Push origin. Later updates go the same way.
    With the upload page instead, go in rounds: first everything except `assets/works` (52 files);
    then, on GitHub, open `assets`, choose Add file → Upload files, and drop in `works` with
-   `syntax-synapse` and `self-addressed` moved out of it for a moment (91 files); then open
-   `assets/works` and drop in `syntax-synapse` (40 files); then `self-addressed` in two rounds: the
-   folder with only its videos, the `.mp4` and `.webm` files (84), then, inside it on GitHub, its
-   pictures, the `.jpg` files (43).
+   `syntax-synapse`, `unbecoming` and `self-addressed` moved out of it for a moment (88 files); then
+   open `assets/works` and drop in `syntax-synapse` (40 files), then `unbecoming` (79 files); then
+   `self-addressed` in two rounds: the folder with only its videos, the `.mp4` and `.webm` files (84),
+   then, inside it on GitHub, its pictures, the `.jpg` files (43).
    Either way, on a Mac, Finder hides `.nojekyll`. Press Shift-Command-Period to show it, so it goes too.
 2. Settings → Pages → Build and deployment → Deploy from a branch → `main`, `/ (root)`.
 3. Settings → Pages → Custom domain → `stephenbiernacki.com` → Save (the `CNAME` file may have filled it
@@ -95,8 +95,13 @@ entry's `loop`: 640 pixels, MP4 and WebM, with its first frame as the still). It
 is on screen, and not at all for anyone whose device asks for less motion, and its files load only as
 it nears the screen. A live work has no still in the frame, so it hangs as a picture chosen for it: an
 entry's `still`, like RED HERR1NG (1'M HERE), or its `loop`, like Self-Addressed's 42, made from its
-token thumbnails (0x01's loop is also the front page's). UNBECOMING has 21 live works with no picture
-here yet, so it shows the frame alone.
+token thumbnails (0x01's loop is also the front page's).
+
+UNBECOMING's 26 each hang as the GIF the work shows. A live work shows its initial state first, FOG
+or FRACTURE, as its token's metadata on Transient names it; the five whose owners chose a GIF version
+show that GIF. The loops are made from the GIFs in Stephen's UNBECOMING folder, each the same file as
+the one the minted work loads, and fissured's loop is also the front page's. Owners can switch
+versions at any time, so when one does, that work's entry and its loop need changing to match.
 
 ## Adding an image or a live work
 
