@@ -4,9 +4,8 @@
    browser's frame entirely; on an iPhone, which keeps true full screen for videos, it fills the browser
    window instead. Close, or Esc, brings the page back. In a series, the line above the frame comes
    along, so Show another, or the arrow keys, still step through the series.
-   A live work also has a link that opens it in a tab of its own, as it was minted.
-   On a computer these appear under the work while the pointer is over it, or when the keyboard reaches
-   them; on a phone they are always there, small, under the work and never on it.
+   On a computer Full screen appears under the work while the pointer is over it, or when the keyboard
+   reaches it; on a phone it is always there, small, under the work and never on it.
    Nothing is stored and nothing is sent. */
 (function () {
   var root = document.documentElement;
@@ -16,7 +15,7 @@
   var frame = fig.querySelector(".frame");
   var acts = fig.querySelector(".acts");
   if (!frame || !acts) return;
-  var full = acts.querySelector(".full"), shut = acts.querySelector(".shut"), alone = acts.querySelector(".alone");
+  var full = acts.querySelector(".full"), shut = acts.querySelector(".shut");
   var series = fig.classList.contains("series");
   var count = 0;
   if (series) { try { count = JSON.parse(fig.querySelector(".series-data").textContent).length; } catch (x) { count = 0; } }
@@ -38,7 +37,7 @@
 
   function shown() { return document.fullscreenElement || document.webkitFullscreenElement || null; }
 
-  /* the shape the work keeps when it fills the screen, and where its link goes if it is live */
+  /* the shape the work keeps when it fills the screen */
   function sync() {
     var m = frame.querySelector("img, video, iframe"), r = 0;
     if (m && m.tagName !== "IFRAME") {
@@ -48,11 +47,6 @@
     }
     if (!r) r = parseFloat(getComputedStyle(stage).getPropertyValue("--arn")) || 1;
     fig.style.setProperty("--fs-ar", r);
-    if (alone) {
-      var live = !!(m && m.tagName === "IFRAME" && /^https?:/.test(m.src));
-      alone.hidden = !live;
-      if (live) alone.href = m.src;
-    }
     if (open) sharpen();
   }
 

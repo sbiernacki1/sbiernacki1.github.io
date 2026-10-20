@@ -27,7 +27,7 @@ Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=11` at the end (`assets/site.css?v=11`). After
+Every page links to its stylesheet and scripts with `?v=12` at the end (`assets/site.css?v=12`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.
@@ -71,11 +71,11 @@ screen the frame stays in view while the words are read.
 Under the frame, Full screen shows the work alone on the page's own light, as large as the screen
 allows and never cropped (`assets/view.js`). On a computer, Android or an iPad the work leaves the
 browser's frame entirely; on an iPhone, where true full screen is kept for videos, it fills the browser
-window. Close or Esc comes back. In a series, Show another and the arrow keys still step through. A live
-work also has Open in a new tab, which opens it where it was minted, by itself. On a computer these
-appear while the pointer is over the work; on a phone they are always there, under the work, never on
-it. There is no download: the files here are display copies, and the minted originals are one link
-away under each work.
+window. Close or Esc comes back. In a series, Show another and the arrow keys still step through. It is
+the same for every work, whatever it is made of, and there is no Open in a new tab, even for a live
+work. On a computer Full screen appears while the pointer is over the work; on a phone it is always
+there, under the work, never on it. There is no download: the files here are display copies, and the
+minted originals are one link away under each work.
 
 Once a visitor has been with a work for a full minute, a line appears below its title and words: "You
 have been with Deathbed for a minute." It then goes up a minute at a time. Only time with the page in view
