@@ -1,8 +1,9 @@
 /* Stephen Biernacki — site.css
    The hand writes; the machine records.
    Stephen Hand carries everything he would say. Fragment Mono carries what a machine would log:
-   years, specs, links, navigation. Amber appears on links only. The light follows the visitor's own
-   clock (light.js); without the script, the device's light or dark setting. The artworks are never changed. */
+   years, specs, links, navigation. Amber appears on links, the count's dot, and the footer's mark for
+   now. The light follows the visitor's own clock (light.js); without the script, the device's light
+   or dark setting. The artworks are never changed. */
 
 @font-face {
   font-family: "Stephen Hand";
@@ -142,6 +143,15 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 }
 
 .foot { margin-top: auto; padding-top: clamp(40px, 5vw, 72px); color: var(--pencil); }
+/* the time where the visitor is, and the day's light from midnight to midnight with a mark at now:
+   only with the script, which fills it in and draws the bar from its own colors (light.js) */
+.day { display: none; }
+.js .day { display: block; margin-bottom: 22px; visibility: hidden; }
+.js .day.is-on { visibility: visible; }
+.day-now > span { display: inline-block; }   /* on a narrow screen, each sentence starts its own line */
+.day-bar { position: relative; max-width: 560px; height: 12px; margin-top: 16px; border: 1px solid var(--rule); forced-color-adjust: none; }
+.day-mark { position: absolute; top: -6px; bottom: -6px; left: 50%; width: 3px; margin-left: -1.5px; background: var(--amber); }
+.day-hours { display: flex; justify-content: space-between; max-width: 560px; margin-top: 10px; font-size: 12px; line-height: 15px; }
 
 /* ---------- home: the bio, then the wall, laid out by chance (wall.js) ---------- */
 .top { display: flex; align-items: flex-start; gap: 0 56px; margin-top: clamp(36px, 4.4vw, 64px); }

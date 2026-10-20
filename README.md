@@ -6,12 +6,12 @@ Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige
 ## Put it online (GitHub Pages + stephenbiernacki.com)
 
 1. Repository `sbiernacki1.github.io` (public) holds these files at its root, with `index.html` at the top level.
-   The site has 168 files, and GitHub's upload page takes fewer than 100 at a time. GitHub Desktop
+   The site has 172 files, and GitHub's upload page takes fewer than 100 at a time. GitHub Desktop
    (desktop.github.com) has no limit: clone the repository, copy everything in this folder into the
    clone, then Commit to main and Push origin. Later updates go the same way.
    With the upload page instead, go in three rounds: first everything except `assets/works` (50 files);
    then, on GitHub, open `assets`, choose Add file → Upload files, and drop in `works` with
-   `syntax-synapse` moved out of it for a moment (78 files); then open `assets/works` and drop in
+   `syntax-synapse` moved out of it for a moment (82 files); then open `assets/works` and drop in
    `syntax-synapse` (40 files).
    Either way, on a Mac, Finder hides `.nojekyll`. Press Shift-Command-Period to show it, so it goes too.
 2. Settings → Pages → Build and deployment → Deploy from a branch → `main`, `/ (root)`.
@@ -25,7 +25,7 @@ Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=4` at the end (`assets/site.css?v=4`). After
+Every page links to its stylesheet and scripts with `?v=6` at the end (`assets/site.css?v=6`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.
@@ -51,7 +51,9 @@ to its part (`#witnessed`, `#remembered`, `#withheld`). The three are plain text
 
 The wall reads the `wall-data` block at the bottom of `index.html`: each work's title, its record line,
 its page, and a still about 800 pixels wide. A moving work also has a light, silent loop of its own
-frames (640 pixels, MP4 and WebM), with its first frame as the still. Loops play only while they are on
+frames (640 pixels wide, or the work's own size if smaller, as MP4 and WebM), with its first frame as
+the still. Eight works move on the wall: Alien Invasion of Privacy, Self-Addressed, Ephemeron,
+UNBECOMING, PANOPTICISM, Process, Untitled (For Jo) and Deathbed. Loops play only while they are on
 screen, and not at all for anyone whose device asks for less motion. Without JavaScript, the plain
 list above the block (`<ol class="index">`) shows instead, so keep the two in step.
 
@@ -155,10 +157,20 @@ That table is generated from the font file too, and needs regenerating with it.
 
 The site's light follows the visitor's own clock: dark through the night, pale at dawn, white at noon,
 warm at dusk (`assets/light.js`). It runs in each page's head before anything is drawn, and looks at the
-clock again every minute. At every hour the ink is chosen to read clearly on the paper (at least 4.5 to 1),
-and the pencil gray never falls below that either. Amber stays amber, and the artworks are never changed.
-Nothing is stored and nothing is sent. Without JavaScript, the page follows the device's own light or
-dark setting. The hours and colors are listed at the top of `light.js`.
+clock again as each minute begins. At every hour the ink is chosen to read clearly on the paper (at
+least 4.5 to 1), and the pencil gray never falls below that either. Amber stays amber, and the artworks
+are never changed. Nothing is stored and nothing is sent. The hours and colors are listed at the top of
+`light.js`.
+
+The footer of every page shows it: "It is 12:46 in the afternoon where you are. The color of this page
+follows your clock." Under that, a bar holds the whole day's light from midnight to midnight, drawn
+from the same list of colors, with an amber mark at now, so the color under the mark is the page's own.
+The words and the mark change as each minute begins. Noon and midnight on the dot are said as "noon"
+and "midnight"; otherwise it is morning from 5, afternoon from noon, evening from 5 and night from 9.
+The last line is "This site does not track you."
+
+Without JavaScript, the page follows the device's own light or dark setting instead, so the footer
+says only "This site does not track you."
 
 ## Share cards
 

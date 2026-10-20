@@ -1,12 +1,15 @@
 /* light.js
    The light follows the visitor's own clock: dark through the night, pale at dawn, white at noon,
    warm at dusk. This runs in each page's head, before anything is drawn, so a page never opens in the
-   wrong light, and it looks at the clock again every minute. Whatever the hour, the ink is chosen so
-   it reads clearly on the paper, and the pencil never drops below that either.
+   wrong light, and it looks at the clock again as each minute begins. Whatever the hour, the ink is
+   chosen so it reads clearly on the paper, and the pencil never drops below that either.
+   The footer says the time where the visitor is, in words, above a bar of the whole day's light, from
+   midnight to midnight, with an amber mark at now. Both change with the minute.
    It also keeps the count of how long a visitor has been with a work: nothing shows for the first
    minute; after that the line appears and goes up a minute at a time. Only time with the page in view
    counts, and the count ends when the page closes.
-   Nothing is stored and nothing is sent. Without JavaScript, the device's light or dark setting decides. */
+   Nothing is stored and nothing is sent. Without JavaScript, the device's light or dark setting decides,
+   and the footer says only that the site does not track you. */
 (function () {
   var root = document.documentElement;
   root.classList.add("js");
@@ -52,9 +55,8 @@
     };
   }
 
-  var bar = null;
-  function apply() {
-    var d = new Date();
+  var tint = null;
+  function apply(d) {
     var p = light(d.getHours() + d.getMinutes() / 60);
     var s = root.style;
     s.setProperty("--paper", p.paper);
@@ -64,12 +66,42 @@
     s.setProperty("--well", p.well);
     s.colorScheme = p.scheme;
     /* the phone's own bar matches the page */
-    bar = bar || document.querySelector('meta[name="theme-color"]');
-    if (bar) bar.setAttribute("content", p.paper);
+    tint = tint || document.querySelector('meta[name="theme-color"]');
+    if (tint) tint.setAttribute("content", p.paper);
   }
-  apply();
-  setInterval(apply, 60000);
-  document.addEventListener("visibilitychange", function () { if (!document.hidden) apply(); });
+
+  /* the footer: the time in words, and the day's light from midnight to midnight with a mark at now.
+     The bar is drawn from PAPER above, so it always holds the colors the page passes through. */
+  var DAY = "linear-gradient(90deg, " + PAPER.map(function (k) { return k[1] + " " + +(k[0] / 24 * 100).toFixed(2) + "%"; }).join(", ") + ")";
+  function said(d) {
+    var hr = d.getHours(), mn = d.getMinutes();
+    if (mn === 0 && hr === 0) return "midnight";
+    if (mn === 0 && hr === 12) return "noon";
+    var part = hr >= 5 && hr < 12 ? "in the morning" : hr >= 12 && hr < 17 ? "in the afternoon" : hr >= 17 && hr < 21 ? "in the evening" : "at night";
+    return (hr % 12 || 12) + ":" + (mn < 10 ? "0" : "") + mn + " " + part;
+  }
+  function day(d) {
+    var box = document.querySelector(".day");
+    if (!box) return;
+    var t = box.querySelector(".day-time"), bar = box.querySelector(".day-bar"), mark = box.querySelector(".day-mark");
+    if (t) t.textContent = said(d);
+    if (bar && !bar.style.backgroundImage) bar.style.backgroundImage = DAY;
+    if (mark) mark.style.left = ((d.getHours() + d.getMinutes() / 60) / 24 * 100).toFixed(3) + "%";
+    box.classList.add("is-on");
+  }
+
+  /* everything that follows the clock, again as each minute begins */
+  var turn = null;
+  function now() {
+    var d = new Date();
+    apply(d);
+    day(d);
+    clearTimeout(turn);
+    turn = setTimeout(now, 60000 - (d.getSeconds() * 1000 + d.getMilliseconds()) + 30);
+  }
+  now();
+  document.addEventListener("visibilitychange", function () { if (!document.hidden) now(); });
+  if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", function () { day(new Date()); });
 
   /* a page with a wall hides its plain list of works before anything is drawn (see wall.js);
      if the wall can't be drawn, the list comes back once the page has loaded */
