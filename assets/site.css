@@ -86,7 +86,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .quiet { text-decoration-color: transparent; }
 .quiet:hover, .quiet:focus-visible, .quiet[aria-current="page"] { text-decoration-color: var(--amber); }
 
-/* buttons that read as links: Rearrange, Show another */
+/* buttons that read as links: Show another */
 .act {
   font: inherit; color: inherit; background: none; border: 0; border-radius: 0;
   padding: 12px 0; margin: -12px 0;   /* a thumb-sized target, the same look */
@@ -122,10 +122,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 }
 .root > main { display: block; }
 
-/* ---------- header: the name, the pages, and where there is a wall, Rearrange, always in the same place ---------- */
+/* ---------- header: the name and the pages ---------- */
 .hd {
   position: sticky; top: 0; z-index: 10;
-  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 6px 36px;
+  display: grid; grid-template-columns: auto minmax(0, 1fr); align-items: baseline; gap: 6px 36px;
   padding: calc(16px + env(safe-area-inset-top, 0px)) 0 14px;
   background: var(--paper);
   border-bottom: 1px solid var(--rule);
@@ -136,16 +136,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .nm a:hover, .nm a:focus-visible { text-decoration-color: var(--amber); }
 .hd nav { grid-column: 2; }
 .nav { display: flex; flex-wrap: wrap; gap: 4px 24px; }
-.ra { grid-column: 3; display: flex; gap: 20px; align-items: baseline; white-space: nowrap; }
-.an { color: var(--pencil); }
 @media (max-width: 700px) {
-  .hd { grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; }
-  .hd nav { grid-column: 1 / -1; grid-row: 2; }
-  .ra { grid-column: 2; grid-row: 1; }
-  .an { display: none; }
-  /* the name shares its row with Rearrange: on the narrowest phones it is written a little smaller,
-     so even its widest drawings (8.7 em) fit beside the button */
-  .nm { font-size: min(26px, calc((100vw - 120px) / 8.7)); }
+  .hd { grid-template-columns: minmax(0, 1fr); }
+  .hd nav { grid-column: 1; grid-row: 2; }
 }
 
 .foot { margin-top: auto; padding-top: clamp(40px, 5vw, 72px); color: var(--pencil); }
@@ -214,7 +207,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .series-next { display: none; }
 .js .series-next { display: inline; }
 .js .series:not(.is-ready) .v-title { visibility: hidden; }
-.clock { min-width: 8ch; text-align: right; }
 .frame { position: relative; aspect-ratio: var(--ar, 1); background: var(--well); }
 .frame > img, .frame > video, .frame > iframe, .frame > .ph {
   position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: contain;
@@ -229,8 +221,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .about { flex: 1 0 400px; max-width: 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
 @media (max-width: 63.99rem) { .about { flex: none; width: 100%; } }
 .work-title { font-size: clamp(40px, 5vw, 76px); line-height: 1.05; text-wrap: balance; }
+/* the count keeps its place but stays unseen until the visitor has been with the work a full minute (light.js) */
 .count { display: none; color: var(--pencil); }
-.js .count { display: block; }
+.js .count { display: block; visibility: hidden; opacity: 0; transition: opacity 1.6s ease, visibility 0s linear 1.6s; }
+.js .count.is-on { visibility: visible; opacity: 1; transition: opacity 1.6s ease; }
 .dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--amber); margin-right: 9px; vertical-align: 1px; }
 .spec { color: var(--pencil); }
 .ext li + li { margin-top: 6px; }
@@ -306,4 +300,5 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 @media (prefers-reduced-motion: reduce) {
   html, body, .hd { transition: none; }
   .it img, .it video, .pick img { transition: none; }
+  .js .count, .js .count.is-on { transition: none; }
 }

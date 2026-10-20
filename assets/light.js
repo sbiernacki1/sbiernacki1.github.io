@@ -3,8 +3,9 @@
    warm at dusk. This runs in each page's head, before anything is drawn, so a page never opens in the
    wrong light, and it looks at the clock again every minute. Whatever the hour, the ink is chosen so
    it reads clearly on the paper, and the pencil never drops below that either.
-   It also keeps the clock on a work's frame, and the count of how long a visitor has been with a work:
-   the count starts when the page opens and ends when it closes.
+   It also keeps the count of how long a visitor has been with a work: nothing shows for the first
+   minute; after that the line appears and goes up a minute at a time. Only time with the page in view
+   counts, and the count ends when the page closes.
    Nothing is stored and nothing is sent. Without JavaScript, the device's light or dark setting decides. */
 (function () {
   var root = document.documentElement;
@@ -80,20 +81,33 @@
     });
   }
 
-  /* the clock on a work's frame, and the count */
-  var opened = Date.now();
-  function two(n) { return (n < 10 ? "0" : "") + n; }
-  function tick() {
-    var d = new Date(), i;
-    var time = two(d.getHours()) + ":" + two(d.getMinutes()) + ":" + two(d.getSeconds());
-    var clocks = document.querySelectorAll(".clock");
-    for (i = 0; i < clocks.length; i++) clocks[i].textContent = time;
-    var s = Math.floor((Date.now() - opened) / 1000);
-    var spent = Math.floor(s / 3600) + ":" + two(Math.floor(s / 60) % 60) + ":" + two(s % 60);
-    var counts = document.querySelectorAll(".watched");
-    for (i = 0; i < counts.length; i++) counts[i].textContent = spent;
-    setTimeout(tick, 1000 - (Date.now() % 1000) + 5);
+  /* the count: time with the page in view, in whole minutes, shown from the first full minute */
+  var kept = 0, since = document.hidden ? null : Date.now(), timer = null;
+  function spent() { return kept + (since === null ? 0 : Date.now() - since); }
+  function words(m) {
+    function n(k, one, many) { return k === 1 ? one : k + " " + many; }
+    if (m < 60) return n(m, "a minute", "minutes");
+    var h = Math.floor(m / 60), r = m % 60;
+    return n(h, "an hour", "hours") + (r ? " and " + n(r, "a minute", "minutes") : "");
   }
+  function tick() {
+    var ms = spent(), m = Math.floor(ms / 60000), i;
+    if (m >= 1) {
+      var counts = document.querySelectorAll(".count");
+      for (i = 0; i < counts.length; i++) {
+        var w = counts[i].querySelector(".watched");
+        if (w) w.textContent = words(m);
+        counts[i].classList.add("is-on");
+      }
+    }
+    clearTimeout(timer);
+    if (since !== null) timer = setTimeout(tick, 60000 - (ms % 60000) + 20);
+  }
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) { if (since !== null) { kept += Date.now() - since; since = null; } }
+    else if (since === null) since = Date.now();
+    tick();
+  });
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", tick);
   else tick();
 })();

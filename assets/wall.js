@@ -1,11 +1,12 @@
 /* wall.js
    The works, laid out by chance. Every visit draws a new arrangement: which works share a row, how
    large each one is, where it sits in its share of the row, how far it leans, and how each title is
-   written. Rearrange draws another; its number is the seed, so each layout is one of nine thousand.
+   written. Each arrangement comes from one number, its seed, so every layout is one of nine thousand.
    Nothing overlaps and nothing runs off the page: every title is measured from the widths of the very
    drawings it will be written with, before anything is placed.
-   On the front page the wall holds every work, and on a wide screen it starts beside the bio. Under a
-   series, it holds the whole series, and a tap opens that work in the frame above (series.js).
+   On the front page the wall holds every work and one of the Statement's questions, drawn by chance
+   with the rest; on a wide screen it starts beside the bio. Under a series, it holds the whole series,
+   and a tap opens that work in the frame above (series.js).
    Moving works play silently, only while they're on screen, and not at all for anyone whose device
    asks for less motion. Nothing is stored and nothing is sent. */
 (function () {
@@ -295,16 +296,6 @@
     return link;
   }
 
-  /* ---------- Rearrange, in the header ---------- */
-  function header(seed, again) {
-    var ra = document.querySelector(".hd .ra");
-    if (!ra) return;
-    var label = ra.querySelector(".an"), button = ra.querySelector(".rearrange");
-    label.textContent = "Arrangement " + seed;
-    if (!button.wired) { button.addEventListener("click", again); button.wired = true; }
-    ra.hidden = false;
-  }
-
   function onResize(main, render) {
     var w = main.clientWidth, t = null;
     window.addEventListener("resize", function () {
@@ -321,9 +312,13 @@
   /* ---------- the front page ---------- */
   function home(main) {
     var data = JSON.parse(main.querySelector(".wall-data").textContent);
-    var items = data.map(function (d) { var x = {}; for (var k in d) x[k] = d[k]; if (d.w) x.ar = d.w / d.h; return x; });
+    var all = data.map(function (d) { var x = {}; for (var k in d) x[k] = d[k]; if (d.w) x.ar = d.w / d.h; return x; });
     var bio = main.querySelector(".bio"), side = main.querySelector(".side"), wall = main.querySelector(".wall");
     var seed = newSeed();
+    /* every work, and one of the Statement's questions, chosen by the same number as the arrangement */
+    var asks = all.filter(function (x) { return x.quote; });
+    var items = all.filter(function (x) { return !x.quote; });
+    if (asks.length) items.push(asks[seed % asks.length]);
     function render() {
       forget();
       var L = arrange(items, main.clientWidth, seed, true);
@@ -334,7 +329,6 @@
       wall.style.height = L.height + "px";
       draw(wall, L.cells, workCell);
       wall.hidden = false;
-      header(seed, function () { seed = newSeed(); render(); });
       root.classList.add("wall-ready");
     }
     render();
@@ -381,7 +375,6 @@
       draw(wall, L.cells, pickCell);
       mark();
       set.hidden = false;
-      header(seed, function () { seed = newSeed(); render(); });
     }
     fig.addEventListener("series:change", mark);
     render();

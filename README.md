@@ -25,9 +25,10 @@ Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Pages link to `assets/site.css?v=2`, and the series pages to `assets/series.js?v=2`. After changing
-either file, raise that number on every page that links to it, so browsers fetch the new file at once
-instead of reusing their copy of the old one for up to ten minutes.
+Every page links to its stylesheet and scripts with `?v=3` at the end (`assets/site.css?v=3`). After
+changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
+browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
+minutes.
 
 ## Not on the site yet
 
@@ -40,11 +41,14 @@ which load from Transient's, as all of UNBECOMING does.
 ## The front page
 
 The front page is the works. The bio comes first; then every work is laid out by chance, at a
-different size and lean on every visit, and Rearrange in the header draws another arrangement
-(`assets/wall.js`). On a wide screen the first few works sit beside the bio. Each title is written
-in the hand and measured from the widths of the drawings it will use, so nothing overlaps or runs off
-the page. The quote from the Statement, "Anyone can watch. What turns watching into witness?", is part
-of the wall and links to it.
+different size and lean on every visit (`assets/wall.js`). On a wide screen the first few works sit
+beside the bio. Each title is written in the hand and measured from the widths of the drawings it
+will use, so nothing overlaps or runs off the page.
+
+One of the Statement's questions hangs on the wall with the works, a different one by chance on
+different visits, and links to its own part of the Statement (`#witnessed`, `#remembered`,
+`#withheld`). The questions are the entries marked `"quote":true` in the `wall-data` block; a new one
+goes in the same way, word for word as it appears in the Statement.
 
 The wall reads the `wall-data` block at the bottom of `index.html`: each work's title, its record line,
 its page, and a still about 800 pixels wide. A moving work also has a light, silent loop of its own
@@ -57,10 +61,12 @@ list above the block (`<ol class="index">`) shows instead, so keep the two in st
 ## A work's page
 
 The work sits in a frame on the left. The frame's top edge names it, and in a series also says
-"3 of 20" beside Show another; its bottom edge holds the year and the visitor's own clock. Beside the
-frame: the title, the words, how long the visitor has been with the work (counted in their browser,
-never stored), the record, and the links. On a wide screen the frame stays in view while the words
-are read.
+"3 of 20" beside Show another; its bottom edge holds the year. Beside the frame: the title, the
+words, the record, and the links. On a wide screen the frame stays in view while the words are read.
+
+Once a visitor has been with a work for a full minute, a line appears below its title and words: "You
+have been with Deathbed for a minute." It then goes up a minute at a time. Only time with the page in view
+counts, nothing is stored, and the count ends when the page closes (`assets/light.js`).
 
 Under a series where every work has a still here, the whole series is laid out by chance, and a tap
 on any of them opens it in the frame. Self-Addressed, UNBECOMING and RED HERR1NG include live works
@@ -131,7 +137,7 @@ is noted in the comment). If the font is updated, regenerate the table along wit
 and leave the digit 1 out of it: only its default drawing has a flag, and the others read as an l.
 
 The titles on the walls are written by `assets/wall.js` the same way, from the same drawings, with
-one difference: each arrangement picks them from its own number, so Rearrange writes them anew. Its
+one difference: each arrangement picks them from its own number, so every visit writes them anew. Its
 table also holds how wide each drawing is, so a title's size can be worked out before it is placed.
 That table is generated from the font file too, and needs regenerating with it.
 
