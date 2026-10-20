@@ -6,6 +6,8 @@
    A still can load from where it was minted too (an https link), like a GIF an owner chose.
    A moving work too heavy to show as minted plays as a silent, looping video of the same frames;
    a tap on it steps, as with a still.
+   A work that asks something of the visitor (a cursor or finger moved over it) has its own line
+   under the frame (its note), shown only while that work is in the frame.
    The wall of the whole series below the frame (wall.js) can open any work here.
    The page address follows along (#slug), so any single work can be linked.
    Nothing is stored and nothing is sent. */
@@ -26,6 +28,8 @@
     var title = fig.querySelector(".v-title");
     var pos = fig.querySelector(".v-pos");
     var next = fig.querySelector(".series-next");
+    var noted = list.some(function (d) { return d.note; });
+    var note = noted && fig.parentNode ? fig.parentNode.querySelector(".media-note") : null;
     var linked = !window.__PREVIEW__;
     var img = null, i = 0;
 
@@ -106,6 +110,7 @@
       }
       i = k;
       title.textContent = d.title;
+      if (note) { if (d.note) note.textContent = d.note; note.hidden = !d.note; }
       if (pos) pos.textContent = (k + 1) + " of " + list.length;
       if (follow && linked && window.history && history.replaceState) history.replaceState(null, "", "#" + d.slug);
       var n = list[(k + 1) % list.length];

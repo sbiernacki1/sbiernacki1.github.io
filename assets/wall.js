@@ -1,6 +1,6 @@
 /* wall.js
-   The works, hung by chance. They keep their order: newest first on the front page, and the series'
-   own order under a series. Every visit draws a new hanging: which works share a row, how large each
+   The works, hung by chance. On the front page they keep their order, newest first; under a series,
+   chance decides the order too. Every visit draws a new hanging: which works share a row, how large each
    one is, where it sits in its share of the row, how far it leans, and how each title is written. Each
    hanging comes from one number, its seed, so every layout is one of nine thousand.
    Nothing overlaps and nothing runs off the page: every title is measured from the widths of the very
@@ -72,7 +72,9 @@
       return n;
     }
 
-    var list = items.slice();  /* in their own order: chance decides the hanging, not the sequence */
+    /* the front page keeps the works in their own order, newest first; a series is hung in any order */
+    var list = items.slice();
+    if (!home) for (var s = list.length - 1; s > 0; s--) { var o = Math.floor(R() * (s + 1)), sw0 = list[s]; list[s] = list[o]; list[o] = sw0; }
     var narrow = fw < 700;
     var P = home
       ? (narrow ? { Lmin: 112, Lmax: fw * 0.7, fill: [0.6, 0.32], fsImg: [17, 3], fsTxt: [28, 10], drop: 24, gap: [22, 30], G: 14, inset: 0, edge: 8, lh: 1.12, lean: 2.5 }
@@ -308,8 +310,11 @@
     if (!fig) return;
     var list = JSON.parse(fig.querySelector(".series-data").textContent);
     var base = fig.getAttribute("data-base") || "";
+    /* a moving work hangs as a light loop of its own, with its first frame as the still */
     var items = list.map(function (d, k) {
-      return { t: d.title, src: base + (d.small || d.src || d.poster), w: d.w, h: d.h, ar: d.w / d.h, idx: k };
+      var x = { t: d.title, src: base + (d.small || d.src || d.poster), w: d.w, h: d.h, ar: d.w / d.h, idx: k };
+      if (d.loop) { x.src = base + d.loop.poster; x.mp4 = base + d.loop.mp4; x.webm = base + d.loop.webm; }
+      return x;
     });
     var wall = set.querySelector(".wall");
     var seed = newSeed();
@@ -324,7 +329,7 @@
       b.type = "button";
       b.className = "pick";
       b.setAttribute("data-idx", it.idx);
-      b.appendChild(still(it));
+      b.appendChild(it.mp4 && fmt && !calm ? moving(it) : still(it));
       b.appendChild(plain(it.t));
       b.appendChild(caption(c));
       b.addEventListener("click", function () {
@@ -337,6 +342,7 @@
       return b;
     }
     function render() {
+      forget();
       var L = arrange(items, main.clientWidth, seed, false);
       wall.style.height = L.height + "px";
       draw(wall, L.cells, pickCell);
