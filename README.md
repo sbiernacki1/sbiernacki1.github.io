@@ -27,7 +27,7 @@ Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=10` at the end (`assets/site.css?v=10`). After
+Every page links to its stylesheet and scripts with `?v=11` at the end (`assets/site.css?v=11`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.
@@ -146,8 +146,8 @@ the works in the block's order. Then update the Previous/Next
 links on its neighbors.
 The last work's Next link goes to the Statement, so a walk through the works ends there.
 
-Every work with a page is on the front page. Under "Also", it links to everything on Rodeo and on
-Tezos; those overlap with pages here on purpose, so they say "All".
+Every work with a page is on the front page, and only those: the rest of what is minted is a link
+away on Elsewhere (Verse, Objkt and the others).
 A page with no words (Ephemeron, Process) simply has none: the frame and the record.
 
 ## How the handwriting works
