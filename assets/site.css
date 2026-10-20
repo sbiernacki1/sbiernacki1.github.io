@@ -168,8 +168,6 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
   text-decoration-color: var(--amber); text-decoration-thickness: 0.11em;
 }
 .it .meta { display: block; margin-top: 6px; font-size: 12px; line-height: 1.4; color: var(--pencil); }
-.quote { font-family: var(--hand); line-height: 1.22; transform-origin: 0 60%; }
-.quote-link { display: inline-block; margin-top: 12px; font-size: 13px; }
 .pixelated { image-rendering: pixelated; }
 
 /* ---------- lists: the works without the wall, Also, Elsewhere ---------- */
@@ -184,6 +182,13 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .index { margin-top: clamp(40px, 5vw, 80px); }
 .entry + .entry { margin-top: clamp(1.4rem, 3.2vw, 2.25rem); }
 .entry .f { font-size: clamp(2.1rem, 4.6vw, 3.4rem); line-height: 1.2; }
+/* the Statement's three questions, in order, after the works: one column on a phone, one row on a wider screen */
+.asks { margin-top: clamp(24px, 3vw, 48px); }  /* the wall already ends with a row's worth of space */
+.asks-h { color: var(--pencil); font-size: 13px; }
+.asks-list { margin-top: 20px; display: grid; grid-template-columns: minmax(0, 1fr); gap: 36px; }
+@media (min-width: 48rem) { .asks-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px clamp(32px, 4vw, 64px); } }
+.ask { font-size: clamp(23px, 2vw, 30px); line-height: 1.3; text-wrap: pretty; }
+.asks-list a { display: inline-block; margin-top: 12px; font-size: 13px; }
 .also { margin-top: clamp(48px, 6vw, 96px); display: flex; flex-wrap: wrap; gap: 8px 40px; align-items: baseline; }
 .also-h { color: var(--pencil); }
 .also .note { color: var(--pencil); }
@@ -197,17 +202,16 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
   .work { flex-direction: row; gap: clamp(32px, 4vw, 64px); }
   .stage { position: sticky; top: calc(84px + env(safe-area-inset-top, 0px)); }
 }
-.viewer { border: 1px solid var(--rule); }
-.strip { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 12px; font-size: 12px; line-height: 15px; }
-.viewer > .strip:first-child { border-bottom: 1px solid var(--rule); }
-.strip.low { border-top: 1px solid var(--rule); color: var(--pencil); }
+/* in a series, a line above the frame names the work showing; the only line drawn is the frame's own edge */
+.strip { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 0 0 10px; font-size: 12px; line-height: 15px; }
 .v-title { min-width: 0; overflow-wrap: anywhere; }
 .v-ctl { display: flex; gap: 18px; align-items: baseline; white-space: nowrap; }
 .v-pos { color: var(--pencil); }
 .series-next { display: none; }
 .js .series-next { display: inline; }
 .js .series:not(.is-ready) .v-title { visibility: hidden; }
-.frame { position: relative; aspect-ratio: var(--ar, 1); background: var(--well); }
+/* the edge is drawn just outside the frame, so the frame keeps the work's exact proportions */
+.frame { position: relative; aspect-ratio: var(--ar, 1); background: var(--well); box-shadow: 0 0 0 1px var(--rule); }
 .frame > img, .frame > video, .frame > iframe, .frame > .ph {
   position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: contain;
   background: var(--media-bg, transparent);

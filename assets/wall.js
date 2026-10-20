@@ -1,12 +1,12 @@
 /* wall.js
-   The works, laid out by chance. Every visit draws a new arrangement: which works share a row, how
-   large each one is, where it sits in its share of the row, how far it leans, and how each title is
-   written. Each arrangement comes from one number, its seed, so every layout is one of nine thousand.
+   The works, hung by chance. They keep their order: newest first on the front page, and the series'
+   own order under a series. Every visit draws a new hanging: which works share a row, how large each
+   one is, where it sits in its share of the row, how far it leans, and how each title is written. Each
+   hanging comes from one number, its seed, so every layout is one of nine thousand.
    Nothing overlaps and nothing runs off the page: every title is measured from the widths of the very
    drawings it will be written with, before anything is placed.
-   On the front page the wall holds every work and one of the Statement's questions, drawn by chance
-   with the rest; on a wide screen it starts beside the bio. Under a series, it holds the whole series,
-   and a tap opens that work in the frame above (series.js).
+   On the front page the wall holds every work, and on a wide screen it starts beside the bio. Under a
+   series, it holds the whole series, and a tap opens that work in the frame above (series.js).
    Moving works play silently, only while they're on screen, and not at all for anyone whose device
    asks for less motion. Nothing is stored and nothing is sent. */
 (function () {
@@ -72,14 +72,13 @@
       return n;
     }
 
-    var list = items.slice();
-    for (var s = list.length - 1; s > 0; s--) { var r = Math.floor(R() * (s + 1)); var tmp = list[s]; list[s] = list[r]; list[r] = tmp; }
+    var list = items.slice();  /* in their own order: chance decides the hanging, not the sequence */
     var narrow = fw < 700;
     var P = home
-      ? (narrow ? { Lmin: 112, Lmax: fw * 0.7, fill: [0.6, 0.32], fsImg: [17, 3], fsTxt: [28, 10], drop: 24, gap: [22, 30], G: 14, inset: 0, edge: 8, quoteW: 150, lh: 1.12, lean: 2.5 }
-                : { Lmin: 120, Lmax: 330, fill: [0.5, 0.42], fsImg: [22, 6], fsTxt: [34, 12], drop: 64, gap: [36, 56], G: 36, inset: 18, edge: 0, quoteW: 280, lh: 1.12, lean: 2.5 })
-      : (narrow ? { Lmin: 112, Lmax: fw * 0.8, fill: [0.62, 0.34], fsImg: [16, 2], fsTxt: [28, 10], drop: 26, gap: [20, 26], G: 14, inset: 0, edge: 8, quoteW: 150, lh: 1.15, lean: 2 }
-                : { Lmin: 130, Lmax: 300, fill: [0.52, 0.42], fsImg: [18, 5], fsTxt: [34, 12], drop: 64, gap: [32, 54], G: 36, inset: 18, edge: 0, quoteW: 280, lh: 1.15, lean: 2 });
+      ? (narrow ? { Lmin: 112, Lmax: fw * 0.7, fill: [0.6, 0.32], fsImg: [17, 3], fsTxt: [28, 10], drop: 24, gap: [22, 30], G: 14, inset: 0, edge: 8, lh: 1.12, lean: 2.5 }
+                : { Lmin: 120, Lmax: 330, fill: [0.5, 0.42], fsImg: [22, 6], fsTxt: [34, 12], drop: 64, gap: [36, 56], G: 36, inset: 18, edge: 0, lh: 1.12, lean: 2.5 })
+      : (narrow ? { Lmin: 112, Lmax: fw * 0.8, fill: [0.62, 0.34], fsImg: [16, 2], fsTxt: [28, 10], drop: 26, gap: [20, 26], G: 14, inset: 0, edge: 8, lh: 1.15, lean: 2 }
+                : { Lmin: 130, Lmax: 300, fill: [0.52, 0.42], fsImg: [18, 5], fsTxt: [34, 12], drop: 64, gap: [32, 54], G: 36, inset: 18, edge: 0, lh: 1.15, lean: 2 });
     var tilt = Math.sin(P.lean * Math.PI / 180);
     var drawn = list.map(function (it) {
       var g = write(it.t), rs = runs(g);
@@ -92,7 +91,6 @@
     function need(d) {
       /* the narrowest share of a row a piece can have and still fit its longest word */
       var it = d.it;
-      if (it.quote) return Math.max(P.quoteW, Math.round(P.fsTxt[0] * 0.72) * d.lw + 8) + P.G;
       if (it.src) return Math.max(P.Lmin * Math.min(1, it.ar), P.fsImg[0] * d.lw + 8) + P.G;
       return P.fsTxt[0] * d.lw + 8 + P.G;
     }
@@ -102,8 +100,8 @@
       var spare = Math.max(0, width - needs.reduce(sum, 0));
       var wts = row.map(function () { return 0.7 + R() * 0.9; });
       var tot = wts.reduce(sum, 0);
-      /* on a phone the wall keeps 8px clear at its left, more than a tilt can swing a title or the quote
-         out past its box; elsewhere each piece's own inset does that */
+      /* on a phone the wall keeps 8px clear at its left, more than a tilt can swing a title out past its
+         box; elsewhere each piece's own inset does that */
       var x0 = P.edge, rowH = 0;
       row.forEach(function (d, j) {
         var it = d.it, seg = needs[j] + spare * wts[j] / tot, room = seg - P.G, w, fs, used, bh;
@@ -114,28 +112,20 @@
           fs = Math.min(P.fsImg[0] + Math.round(R() * P.fsImg[1]), Math.floor((w - 8) / d.lw));
           bh = lines(d.r, fs, w) * fs * P.lh;
           used = w / it.ar + 10 + bh + (it.m ? Math.max(6 + mono(it.m, w) * 16.8, w * tilt) : w * tilt + 6);
-        } else if (it.quote) {
-          fs = Math.min(Math.round((P.fsTxt[0] + Math.round(R() * P.fsTxt[1])) * 0.72), Math.floor((room - 8) / d.lw));
-          w = Math.floor(Math.min(room, Math.max(fs * d.tw * (0.42 + R() * 0.2), fs * d.lw + 8, P.quoteW)));
-          bh = lines(d.r, fs, w) * fs * 1.22;
-          used = bh + Math.max(12 + 21, w * tilt);
         } else {
           fs = Math.min(P.fsTxt[0] + Math.round(R() * P.fsTxt[1]), Math.floor((room - 8) / d.lw));
           w = Math.floor(Math.min(room, Math.max(fs * d.tw * (0.55 + R() * 0.5), fs * d.lw + 8)));
           bh = lines(d.r, fs, w) * fs * P.lh;
           used = 10 + bh + (it.m ? Math.max(6 + mono(it.m, w) * 16.8, w * tilt) : w * tilt + 6);
         }
-        /* titles and the quote turn about their left edge, 60% of the way down (site.css), so a tilt can
-           lift the far end of the quote, which sits at the top of its cell, by its width times the tilt */
-        var rise = it.quote ? Math.ceil(w * tilt) + 1 : 0;
         var top = y0 + R() * P.drop;
         var x = Math.round(x0 + P.inset + R() * Math.max(0, room - w));
         var rot = (R() - 0.5) * 2 * P.lean;
         /* a title that tilts up toward its picture moves down by whatever the 10px gap under the picture
            can't take, so its letters stay at least 3px clear of the picture */
         var lift = it.src && rot < 0 ? Math.max(0, Math.ceil(w * Math.sin(-rot * Math.PI / 180)) - 7) : 0;
-        out.push({ d: d, w: w, fs: fs, lh: P.lh, x: x, y: Math.round(top + rise), rot: rot.toFixed(2), lift: lift });
-        rowH = Math.max(rowH, top - y0 + rise + lift + used + 4);
+        out.push({ d: d, w: w, fs: fs, lh: P.lh, x: x, y: Math.round(top), rot: rot.toFixed(2), lift: lift });
+        rowH = Math.max(rowH, top - y0 + lift + used + 4);
         x0 += seg;
       });
       return rowH;
@@ -146,9 +136,6 @@
     if (home && fw >= 900) {
       bioW = Math.min(640, Math.round(fw * 0.47));
       var sw = fw - bioW - 56;
-      var qi = -1;
-      drawn.forEach(function (d, k) { if (d.it.quote) qi = k; });
-      if (qi > -1 && qi < 3 && drawn.length > 3) { var qq = drawn[qi]; drawn[qi] = drawn[3]; drawn[3] = qq; }
       var kb = 3;
       while (kb > 1 && drawn.slice(0, kb).map(need).reduce(sum, 0) > sw) kb--;
       sideH = Math.ceil(place(drawn.slice(0, kb), sw, 0, side));
@@ -265,22 +252,6 @@
   /* a work on the front page: its still or its loop, its title in the hand, its year and size in the log */
   function workCell(c) {
     var it = c.d.it;
-    if (it.quote) {
-      var box = document.createDocumentFragment();
-      var p = document.createElement("p");
-      p.className = "quote";
-      p.style.fontSize = c.fs + "px";
-      p.style.transform = "rotate(" + c.rot + "deg)";
-      p.appendChild(plain(it.t));
-      p.appendChild(inked(c.d.g));
-      var a = document.createElement("a");
-      a.className = "quote-link";
-      a.href = it.href;
-      a.textContent = it.link;
-      box.appendChild(p);
-      box.appendChild(a);
-      return box;
-    }
     var link = document.createElement("a");
     link.className = "it";
     link.href = it.href;
@@ -312,13 +283,9 @@
   /* ---------- the front page ---------- */
   function home(main) {
     var data = JSON.parse(main.querySelector(".wall-data").textContent);
-    var all = data.map(function (d) { var x = {}; for (var k in d) x[k] = d[k]; if (d.w) x.ar = d.w / d.h; return x; });
+    var items = data.map(function (d) { var x = {}; for (var k in d) x[k] = d[k]; if (d.w) x.ar = d.w / d.h; return x; });
     var bio = main.querySelector(".bio"), side = main.querySelector(".side"), wall = main.querySelector(".wall");
     var seed = newSeed();
-    /* every work, and one of the Statement's questions, chosen by the same number as the arrangement */
-    var asks = all.filter(function (x) { return x.quote; });
-    var items = all.filter(function (x) { return !x.quote; });
-    if (asks.length) items.push(asks[seed % asks.length]);
     function render() {
       forget();
       var L = arrange(items, main.clientWidth, seed, true);

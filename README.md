@@ -25,7 +25,7 @@ Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=3` at the end (`assets/site.css?v=3`). After
+Every page links to its stylesheet and scripts with `?v=4` at the end (`assets/site.css?v=4`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.
@@ -40,15 +40,14 @@ which load from Transient's, as all of UNBECOMING does.
 
 ## The front page
 
-The front page is the works. The bio comes first; then every work is laid out by chance, at a
-different size and lean on every visit (`assets/wall.js`). On a wide screen the first few works sit
-beside the bio. Each title is written in the hand and measured from the widths of the drawings it
-will use, so nothing overlaps or runs off the page.
+The front page is the works. The bio comes first; then every work, newest first, hung by chance: a
+different size, place and lean on every visit, with the order always the same (`assets/wall.js`). On a
+wide screen the first few works sit beside the bio. Each title is written in the hand and measured from
+the widths of the drawings it will use, so nothing overlaps or runs off the page.
 
-One of the Statement's questions hangs on the wall with the works, a different one by chance on
-different visits, and links to its own part of the Statement (`#witnessed`, `#remembered`,
-`#withheld`). The questions are the entries marked `"quote":true` in the `wall-data` block; a new one
-goes in the same way, word for word as it appears in the Statement.
+After the works, the question that ends each part of the Statement sits in a row, in order, and links
+to its part (`#witnessed`, `#remembered`, `#withheld`). The three are plain text in `index.html`, in the
+`asks` section after the list, word for word as they appear in the Statement.
 
 The wall reads the `wall-data` block at the bottom of `index.html`: each work's title, its record line,
 its page, and a still about 800 pixels wide. A moving work also has a light, silent loop of its own
@@ -60,16 +59,17 @@ list above the block (`<ol class="index">`) shows instead, so keep the two in st
 
 ## A work's page
 
-The work sits in a frame on the left. The frame's top edge names it, and in a series also says
-"3 of 20" beside Show another; its bottom edge holds the year. Beside the frame: the title, the
-words, the record, and the links. On a wide screen the frame stays in view while the words are read.
+The work sits in a frame on the left, inside a thin edge. In a series, a line above the frame names the
+work showing and says "3 of 20" beside Show another; a single work's frame stands alone, since its
+title is beside it. Beside the frame: the title, the words, the record, and the links. On a wide
+screen the frame stays in view while the words are read.
 
 Once a visitor has been with a work for a full minute, a line appears below its title and words: "You
 have been with Deathbed for a minute." It then goes up a minute at a time. Only time with the page in view
 counts, nothing is stored, and the count ends when the page closes (`assets/light.js`).
 
-Under a series where every work has a still here, the whole series is laid out by chance, and a tap
-on any of them opens it in the frame. Self-Addressed, UNBECOMING and RED HERR1NG include live works
+Under a series where every work has a still here, the whole series hangs in its own order, at sizes and
+places chosen by chance, and a tap on any of them opens it in the frame. Self-Addressed, UNBECOMING and RED HERR1NG include live works
 with no still, so they show the frame alone.
 
 ## Adding an image or a live work
@@ -115,7 +115,8 @@ with its first frame as the poster: Deathbed's minted GIF is 188 MB, and its vid
 
 Copy any folder in `/works/`, rename it, and edit the title, the record lines, the media, and the text.
 Add it to the front page twice: a row in the list where it falls by date, newest first, and an entry
-in the `wall-data` block with its still (and its loop, if it moves). Then update the Previous/Next
+in the same place in the `wall-data` block with its still (and its loop, if it moves). The wall hangs
+the works in the block's order. Then update the Previous/Next
 links on its neighbors.
 The last work's Next link goes to the Statement, so a walk through the works ends there.
 
