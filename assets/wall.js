@@ -177,6 +177,7 @@
     entries.forEach(function (e) {
       var v = e.target;
       if (e.isIntersecting) {
+        if (!v.getAttribute("poster")) v.poster = v.getAttribute("data-poster");
         if (!v.getAttribute("src")) v.src = v.getAttribute("data-src");
         var p = v.play();
         if (p && p.catch) p.catch(function () {});
@@ -223,12 +224,14 @@
     v.setAttribute("aria-hidden", "true");
     v.width = it.w;
     v.height = it.h;
-    v.poster = it.src;
+    /* its first frame and its file load only as it nears the screen, so a long wall stays light */
+    v.setAttribute("data-poster", it.src);
     v.setAttribute("data-src", it[fmt]);
     if (io) { io.observe(v); watching.push(v); }
-    else { v.src = it[fmt]; v.autoplay = true; }
+    else { v.poster = it.src; v.src = it[fmt]; v.autoplay = true; }
     return v;
   }
+  function moves(it) { return !calm && !!fmt && !!it[fmt]; }
   function draw(box, cells, make) {
     while (box.firstChild) box.removeChild(box.firstChild);
     cells.forEach(function (c) {
@@ -257,7 +260,7 @@
     var link = document.createElement("a");
     link.className = "it";
     link.href = it.href;
-    link.appendChild(it.mp4 && fmt && !calm ? moving(it) : still(it));
+    link.appendChild(moves(it) ? moving(it) : still(it));
     link.appendChild(plain(it.t));
     link.appendChild(caption(c));
     if (it.m) {
@@ -310,10 +313,16 @@
     if (!fig) return;
     var list = JSON.parse(fig.querySelector(".series-data").textContent);
     var base = fig.getAttribute("data-base") || "";
-    /* a moving work hangs as a light loop of its own, with its first frame as the still */
+    /* a moving work hangs as a light loop of its own, with its first frame as the still; a live work,
+       which has no still in the frame, hangs as the picture chosen for it (its still or its loop) */
     var items = list.map(function (d, k) {
-      var x = { t: d.title, src: base + (d.small || d.src || d.poster), w: d.w, h: d.h, ar: d.w / d.h, idx: k };
-      if (d.loop) { x.src = base + d.loop.poster; x.mp4 = base + d.loop.mp4; x.webm = base + d.loop.webm; }
+      var x = { t: d.title, src: base + (d.small || d.src || d.poster), w: d.w, h: d.h, idx: k };
+      if (d.still) { x.src = base + d.still.src; x.w = d.still.w; x.h = d.still.h; }
+      if (d.loop) {
+        x.src = base + d.loop.poster; x.mp4 = base + d.loop.mp4; x.webm = base + d.loop.webm;
+        if (d.loop.w) { x.w = d.loop.w; x.h = d.loop.h; }
+      }
+      x.ar = x.w / x.h;
       return x;
     });
     var wall = set.querySelector(".wall");
@@ -329,7 +338,7 @@
       b.type = "button";
       b.className = "pick";
       b.setAttribute("data-idx", it.idx);
-      b.appendChild(it.mp4 && fmt && !calm ? moving(it) : still(it));
+      b.appendChild(moves(it) ? moving(it) : still(it));
       b.appendChild(plain(it.t));
       b.appendChild(caption(c));
       b.addEventListener("click", function () {

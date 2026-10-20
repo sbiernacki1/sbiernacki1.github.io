@@ -6,13 +6,15 @@ Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige
 ## Put it online (GitHub Pages + stephenbiernacki.com)
 
 1. Repository `sbiernacki1.github.io` (public) holds these files at its root, with `index.html` at the top level.
-   The site has 181 files, and GitHub's upload page takes fewer than 100 at a time. GitHub Desktop
+   The site has 306 files, and GitHub's upload page takes fewer than 100 at a time. GitHub Desktop
    (desktop.github.com) has no limit: clone the repository, copy everything in this folder into the
    clone, then Commit to main and Push origin. Later updates go the same way.
-   With the upload page instead, go in three rounds: first everything except `assets/works` (50 files);
+   With the upload page instead, go in rounds: first everything except `assets/works` (50 files);
    then, on GitHub, open `assets`, choose Add file → Upload files, and drop in `works` with
-   `syntax-synapse` moved out of it for a moment (91 files); then open `assets/works` and drop in
-   `syntax-synapse` (40 files).
+   `syntax-synapse` and `self-addressed` moved out of it for a moment (89 files); then open
+   `assets/works` and drop in `syntax-synapse` (40 files); then `self-addressed` in two rounds: the
+   folder with only its videos, the `.mp4` and `.webm` files (84), then, inside it on GitHub, its
+   pictures, the `.jpg` files (43).
    Either way, on a Mac, Finder hides `.nojekyll`. Press Shift-Command-Period to show it, so it goes too.
 2. Settings → Pages → Build and deployment → Deploy from a branch → `main`, `/ (root)`.
 3. Settings → Pages → Custom domain → `stephenbiernacki.com` → Save (the `CNAME` file may have filled it
@@ -25,7 +27,7 @@ Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=7` at the end (`assets/site.css?v=7`). After
+Every page links to its stylesheet and scripts with `?v=8` at the end (`assets/site.css?v=8`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.
@@ -86,12 +88,15 @@ work." In a series the line belongs to the works it is true of (an entry's `note
 and shows only while one of them is in the frame: UNBECOMING's live works have it, its five GIF
 versions don't.
 
-Under a series where every work has a still here, the whole series hangs on a wall, by chance: the
+Under a series where every work has a picture here, the whole series hangs on a wall, by chance: the
 order, the sizes and the places are new on every visit (the front page keeps its order, newest first).
 A tap on any work opens it in the frame. A moving work hangs as a light, silent loop of its own (an
-entry's `loop`: 640 pixels, MP4 and WebM, with its first frame as the still), and plays only while it
-is on screen, and not at all for anyone whose device asks for less motion. Self-Addressed, UNBECOMING
-and RED HERR1NG include live works with no still here yet, so they show the frame alone.
+entry's `loop`: 640 pixels, MP4 and WebM, with its first frame as the still). It plays only while it
+is on screen, and not at all for anyone whose device asks for less motion, and its files load only as
+it nears the screen. A live work has no still in the frame, so it hangs as a picture chosen for it: an
+entry's `still`, like RED HERR1NG (1'M HERE), or its `loop`, like Self-Addressed's 42, made from its
+token thumbnails (0x01's loop is also the front page's). UNBECOMING has 21 live works with no picture
+here yet, so it shows the frame alone.
 
 ## Adding an image or a live work
 
