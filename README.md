@@ -6,10 +6,10 @@ Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige
 ## Put it online (GitHub Pages + stephenbiernacki.com)
 
 1. Repository `sbiernacki1.github.io` (public) holds these files at its root, with `index.html` at the top level.
-   The site has 167 files, and GitHub's upload page takes fewer than 100 at a time. GitHub Desktop
+   The site has 168 files, and GitHub's upload page takes fewer than 100 at a time. GitHub Desktop
    (desktop.github.com) has no limit: clone the repository, copy everything in this folder into the
    clone, then Commit to main and Push origin. Later updates go the same way.
-   With the upload page instead, go in three rounds: first everything except `assets/works` (49 files);
+   With the upload page instead, go in three rounds: first everything except `assets/works` (50 files);
    then, on GitHub, open `assets`, choose Add file → Upload files, and drop in `works` with
    `syntax-synapse` moved out of it for a moment (78 files); then open `assets/works` and drop in
    `syntax-synapse` (40 files).
@@ -63,6 +63,15 @@ The work sits in a frame on the left, inside a thin edge. In a series, a line ab
 work showing and says "3 of 20" beside Show another; a single work's frame stands alone, since its
 title is beside it. Beside the frame: the title, the words, the record, and the links. On a wide
 screen the frame stays in view while the words are read.
+
+Under the frame, Full screen shows the work alone on the page's own light, as large as the screen
+allows and never cropped (`assets/view.js`). On a computer, Android or an iPad the work leaves the
+browser's frame entirely; on an iPhone, where true full screen is kept for videos, it fills the browser
+window. Close or Esc comes back. In a series, Show another and the arrow keys still step through. A live
+work also has Open in a new tab, which opens it where it was minted, by itself. On a computer these
+appear while the pointer is over the work; on a phone they are always there, under the work, never on
+it. There is no download: the files here are display copies, and the minted originals are one link
+away under each work.
 
 Once a visitor has been with a work for a full minute, a line appears below its title and words: "You
 have been with Deathbed for a minute." It then goes up a minute at a time. Only time with the page in view

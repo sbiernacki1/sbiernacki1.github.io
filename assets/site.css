@@ -222,6 +222,39 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .ph { display: grid; place-items: center; color: var(--pencil); padding: 1.25rem; text-align: center; }
 .media-note { margin-top: 10px; color: var(--pencil); }
 
+/* under the work: Full screen, and for a live work a tab of its own (view.js). On a computer they show
+   while the pointer is over the work or the keyboard reaches them; on a phone they are always there. */
+.acts { display: flex; justify-content: flex-end; align-items: baseline; gap: 18px; padding-top: 10px; font-size: 12px; line-height: 15px; }
+.acts .full { display: none; }
+.js .acts .full { display: inline-block; }
+@media (hover: hover) and (pointer: fine) {
+  .acts { opacity: 0; transition: opacity 0.2s ease; }
+  .stage:hover .acts, .acts:focus-within, .is-focus .acts { opacity: 1; }
+}
+
+/* full screen: the work alone on the page's own light, as large as the screen allows, never cropped */
+.focusing { overflow: hidden; overscroll-behavior: none; }
+.focusing .stage { z-index: 100; }
+.viewer.is-focus {
+  position: fixed; inset: 0; z-index: 100; margin: 0;
+  display: flex; flex-direction: column;
+  background: var(--paper);
+  padding: calc(14px + env(safe-area-inset-top, 0px)) 0 calc(14px + env(safe-area-inset-bottom, 0px));
+}
+/* the work may reach the screen's edges; the lines of text above and below keep the page's margins */
+.viewer.is-focus > .strip, .viewer.is-focus > .acts {
+  padding-left: calc(16px + env(safe-area-inset-left, 0px)); padding-right: calc(16px + env(safe-area-inset-right, 0px));
+}
+.viewer.is-focus .frame {
+  flex: 1 1 auto; min-height: 0; aspect-ratio: auto; background: none; box-shadow: none; container-type: size;
+  margin: 0 env(safe-area-inset-right, 0px) 0 env(safe-area-inset-left, 0px);
+}
+.viewer.is-focus .frame > img, .viewer.is-focus .frame > video, .viewer.is-focus .frame > iframe, .viewer.is-focus .frame > .ph {
+  inset: 0; margin: auto;
+  width: min(100cqw, 100cqh * var(--fs-ar, 1)); height: min(100cqh, 100cqw / var(--fs-ar, 1));
+  object-fit: contain; box-shadow: 0 0 0 1px var(--rule);
+}
+
 .about { flex: 1 0 400px; max-width: 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
 @media (max-width: 63.99rem) { .about { flex: none; width: 100%; } }
 .work-title { font-size: clamp(40px, 5vw, 76px); line-height: 1.05; text-wrap: balance; }
@@ -305,4 +338,5 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
   html, body, .hd { transition: none; }
   .it img, .it video, .pick img { transition: none; }
   .js .count, .js .count.is-on { transition: none; }
+  .acts { transition: none; }
 }

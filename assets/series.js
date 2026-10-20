@@ -1,6 +1,6 @@
 /* series.js
    One frame per series. Each visit opens on the first work, or on the one the address names (#slug).
-   "Show another", on the frame's top edge beside "3 of 20", or a tap on a still or a moving work,
+   "Show another", above the frame beside "3 of 20", or a tap on a still or a moving work,
    steps to the next work in order and starts over after the last. Live works play in the frame
    itself, loaded from where they were minted; a tap there belongs to the work.
    A still can load from where it was minted too (an https link), like a GIF an owner chose.
