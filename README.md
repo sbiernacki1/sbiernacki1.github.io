@@ -6,12 +6,12 @@ Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige
 ## Put it online (GitHub Pages + stephenbiernacki.com)
 
 1. Repository `sbiernacki1.github.io` (public) holds these files at its root, with `index.html` at the top level.
-   The site has 306 files, and GitHub's upload page takes fewer than 100 at a time. GitHub Desktop
+   The site has 310 files, and GitHub's upload page takes fewer than 100 at a time. GitHub Desktop
    (desktop.github.com) has no limit: clone the repository, copy everything in this folder into the
    clone, then Commit to main and Push origin. Later updates go the same way.
-   With the upload page instead, go in rounds: first everything except `assets/works` (50 files);
+   With the upload page instead, go in rounds: first everything except `assets/works` (52 files);
    then, on GitHub, open `assets`, choose Add file → Upload files, and drop in `works` with
-   `syntax-synapse` and `self-addressed` moved out of it for a moment (89 files); then open
+   `syntax-synapse` and `self-addressed` moved out of it for a moment (91 files); then open
    `assets/works` and drop in `syntax-synapse` (40 files); then `self-addressed` in two rounds: the
    folder with only its videos, the `.mp4` and `.webm` files (84), then, inside it on GitHub, its
    pictures, the `.jpg` files (43).
