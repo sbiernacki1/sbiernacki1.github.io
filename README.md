@@ -195,9 +195,15 @@ footer.
 
 When a work's page is shared, on X or in a message, the card shows the work: `assets/share/<page>.jpg`,
 1200 × 630, the whole artwork on the paper color beside its title in the hand, never cropped. Moving works
-use one clear frame. Work pages are titled "Deathbed by Stephen Biernacki". The live works without a card
-of their own yet (Alien Invasion of Privacy, Vestige, Self-Addressed, UNBECOMING, Untitled (For Jo)) use
-the site's own card, `assets/og.png`.
+use one clear frame. Work pages are titled "Deathbed by Stephen Biernacki".
+
+The front page, the Statement, Elsewhere, and the live works without a card of their own yet (Alien
+Invasion of Privacy, Vestige, Self-Addressed, UNBECOMING, Untitled (For Jo)) use the site's own card,
+`assets/og.png`: the name in the hand across the colors the site takes through one day, from midnight
+to midnight, each letter in the ink the site uses on the color behind it. Its colors come from the list
+at the top of `assets/light.js`, so if those change, the card should be drawn again. Pages ask for it
+as `og.png?v=2`; raise the number whenever the card changes, so that services which kept a copy of the
+old one fetch the new one.
 
 ## Fonts
 
