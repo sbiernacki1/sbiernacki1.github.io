@@ -9,7 +9,7 @@
    minute; after that the line appears and goes up a minute at a time. Only time with the page in view
    counts, and the count ends when the page closes.
    Nothing is stored and nothing is sent. Without JavaScript, the device's light or dark setting decides,
-   and the footer says only that the site does not track you. */
+   and there is no footer. */
 (function () {
   var root = document.documentElement;
   root.classList.add("js");
