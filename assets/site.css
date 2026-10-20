@@ -152,6 +152,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .day-bar { position: relative; max-width: 560px; height: 12px; margin-top: 16px; border: 1px solid var(--rule); forced-color-adjust: none; }
 .day-mark { position: absolute; top: -6px; bottom: -6px; left: 50%; width: 3px; margin-left: -1.5px; background: var(--amber); }
 .day-hours { display: flex; justify-content: space-between; max-width: 560px; margin-top: 10px; font-size: 12px; line-height: 15px; }
+/* the last line: once the clock has been read, it first says where the time stays */
+.foot-line > span { display: inline-block; }   /* on a narrow screen, each sentence starts its own line */
+.foot-line > .day-stays { display: none; }
+.day.is-on + .foot-line > .day-stays { display: inline-block; }
 
 /* ---------- home: the bio, then the wall, laid out by chance (wall.js) ---------- */
 .top { display: flex; align-items: flex-start; gap: 0 56px; margin-top: clamp(36px, 4.4vw, 64px); }
