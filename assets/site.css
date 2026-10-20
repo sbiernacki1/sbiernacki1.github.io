@@ -1,8 +1,8 @@
 /* Stephen Biernacki — site.css
    The hand writes; the machine records.
    Stephen Hand carries everything he would say. Fragment Mono carries what a machine would log:
-   years, specs, links, navigation. Amber appears on links only. The artworks are the only images
-   and the only motion. */
+   years, specs, links, navigation. Amber appears on links only. The light follows the visitor's own
+   clock (light.js); without the script, the device's light or dark setting. The artworks are never changed. */
 
 @font-face {
   font-family: "Stephen Hand";
@@ -15,68 +15,55 @@
   font-display: swap;
 }
 
+/* These are the noon values. light.js replaces them through the day, before anything is drawn. */
 :root {
   --paper: #FAFAF8;
   --ink: #1C1B18;
-  --pencil: #66645E;
+  --pencil: rgba(28, 27, 24, 0.66);
+  --rule: rgba(28, 27, 24, 0.16);
+  --well: #E9E9E7;   /* behind a work while it loads */
   --amber: #D4A934;
-  --rule: #E2E0DA;
-  --well: #1C1B18;   /* behind a work while it loads */
 
   --hand: "Stephen Hand", ui-rounded, system-ui, sans-serif;
   --mono: "Fragment Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-
-  --pad: clamp(1.25rem, 5.5vw, 5rem);
-  --margin-col: 14.5rem;
-  --gap: clamp(2rem, 4.5vw, 5rem);
+  --pad: clamp(16px, 3.4vw, 48px);
 
   color-scheme: light;
-  box-sizing: border-box;
-  padding-top: env(safe-area-inset-top, 0px);
-  padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-*, *::before, *::after { box-sizing: inherit; }
-
-/* Night: the same ledger with the lights down. The paper takes the ink's color, the ink takes a softened
-   paper, and amber stays amber. It follows the device until a visitor chooses with the Dark/Light word
-   in the header (theme.js). The artworks never change. Keep these two blocks the same. */
-:root[data-theme="dark"] {
-  --paper: #1C1B18;
-  --ink: #E7E4DD;
-  --pencil: #9C988F;
-  --rule: #36332E;
-  --well: #121110;
-  color-scheme: dark;
-}
+/* without the script there is no clock to read, so the device's own dark setting decides */
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --paper: #1C1B18;
-    --ink: #E7E4DD;
-    --pencil: #9C988F;
-    --rule: #36332E;
-    --well: #121110;
+  :root {
+    --paper: #121110;
+    --ink: #ECE8E0;
+    --pencil: rgba(236, 232, 224, 0.66);
+    --rule: rgba(236, 232, 224, 0.18);
+    --well: #080807;
     color-scheme: dark;
   }
 }
+*, *::before, *::after { box-sizing: border-box; }
 
 html {
   background: var(--paper);
   color: var(--ink);
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
-  scroll-padding-top: env(safe-area-inset-top, 0px);
+  transition: background-color 3s linear, color 3s linear;
 }
 body {
   margin: 0;
   background: var(--paper);
   color: var(--ink);
   font-family: var(--mono);
-  font-size: 0.8125rem;
+  font-size: 13px;
   line-height: 1.6;
+  transition: background-color 3s linear, color 3s linear;
 }
+@media (min-width: 60rem) { body { font-size: 14px; } }
 h1, h2, h3, p, ul, ol, figure, blockquote { margin: 0; padding: 0; font-weight: 400; font-size: inherit; }
 ul, ol { list-style: none; }
-img, iframe { display: block; max-width: 100%; }
+img, iframe, video { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
 
 .hand { font-family: var(--hand); }
 .mono { font-family: var(--mono); }
@@ -91,7 +78,7 @@ a {
   text-decoration-skip-ink: none;
 }
 a:hover { text-decoration-thickness: 0.3em; }
-a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .hand a, a.hand { text-decoration-thickness: 0.07em; text-underline-offset: 0.2em; }
 .hand a:hover, a.hand:hover { text-decoration-thickness: 0.16em; }
 
@@ -99,9 +86,19 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .quiet { text-decoration-color: transparent; }
 .quiet:hover, .quiet:focus-visible, .quiet[aria-current="page"] { text-decoration-color: var(--amber); }
 
+/* buttons that read as links: Rearrange, Show another */
+.act {
+  font: inherit; color: inherit; background: none; border: 0; border-radius: 0;
+  padding: 12px 0; margin: -12px 0;   /* a thumb-sized target, the same look */
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  text-decoration-line: underline; text-decoration-color: var(--amber); text-decoration-thickness: 0.125em;
+  text-underline-offset: 0.24em; text-decoration-skip-ink: none;
+}
+.act:hover { text-decoration-thickness: 0.3em; }
+
 .skip {
   position: absolute; left: var(--pad); top: -4rem;
-  background: var(--paper); padding: 0.5rem 0.75rem; z-index: 10;
+  background: var(--paper); padding: 0.5rem 0.75rem; z-index: 20;
 }
 .skip:focus { top: calc(env(safe-area-inset-top, 0px) + 0.75rem); }
 
@@ -113,138 +110,140 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 }
 .vh, .hw-sr { -webkit-user-select: none; user-select: none; }
 
-/* ---------- the ledger: a margin for the machine, a field for the hand ---------- */
-.wrap {
-  max-width: 92rem;
-  padding: clamp(1.25rem, 3.5vw, 2.5rem) var(--pad) clamp(2.5rem, 6vw, 4.5rem);
+/* ---------- the page ---------- */
+.root {
+  max-width: 1680px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 0 var(--pad) clamp(24px, 2.8vw, 40px);
+  display: flex;
+  flex-direction: column;
 }
+.root > main { display: block; }
+
+/* ---------- header: the name, the pages, and where there is a wall, Rearrange, always in the same place ---------- */
+.hd {
+  position: sticky; top: 0; z-index: 10;
+  display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; gap: 6px 36px;
+  padding: calc(16px + env(safe-area-inset-top, 0px)) 0 14px;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule);
+  transition: background-color 3s linear;
+}
+.nm { grid-column: 1; font-family: var(--hand); font-size: 26px; line-height: 1; }
+.nm a { text-decoration-color: transparent; }
+.nm a:hover, .nm a:focus-visible { text-decoration-color: var(--amber); }
+.hd nav { grid-column: 2; }
+.nav { display: flex; flex-wrap: wrap; gap: 4px 24px; }
+.ra { grid-column: 3; display: flex; gap: 20px; align-items: baseline; white-space: nowrap; }
+.an { color: var(--pencil); }
+@media (max-width: 700px) {
+  .hd { grid-template-columns: minmax(0, 1fr) auto; column-gap: 16px; }
+  .hd nav { grid-column: 1 / -1; grid-row: 2; }
+  .ra { grid-column: 2; grid-row: 1; }
+  .an { display: none; }
+  /* the name shares its row with Rearrange: on the narrowest phones it is written a little smaller,
+     so even its widest drawings (8.7 em) fit beside the button */
+  .nm { font-size: min(26px, calc((100vw - 120px) / 8.7)); }
+}
+
+.foot { margin-top: auto; padding-top: clamp(40px, 5vw, 72px); color: var(--pencil); }
+
+/* ---------- home: the bio, then the wall, laid out by chance (wall.js) ---------- */
+.top { display: flex; align-items: flex-start; gap: 0 56px; margin-top: clamp(36px, 4.4vw, 64px); }
+.bio { flex: 0 1 auto; max-width: 640px; font-size: clamp(21px, 1.85vw, 27px); line-height: 1.44; text-wrap: pretty; }
+.side { position: relative; flex: 1 1 0; min-width: 0; }
+.wall { position: relative; }
+.home .wall { margin-top: clamp(40px, 5vw, 80px); }
+/* the list is the wall's stand-in: it shows only if the wall can't be drawn */
+.walled .home .index { display: none; }
+
+.cell { position: absolute; }
+.it, .pick { display: block; width: 100%; color: inherit; text-decoration: none; }
+.pick { padding: 0; margin: 0; border: 0; background: none; font: inherit; text-align: left; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.it img, .it video, .pick img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); transition: transform 0.25s ease; }
+.it video { object-fit: fill; background: var(--well); }
+.it:hover img, .it:hover video, .it:focus-visible img, .it:focus-visible video,
+.pick:hover img, .pick:focus-visible img { transform: translateY(-3px); }
+.cap {
+  display: block; margin-top: 10px; font-family: var(--hand); transform-origin: 0 60%;
+  text-decoration-line: underline; text-decoration-color: transparent; text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.16em; text-decoration-skip-ink: none;
+}
+.it:hover .cap, .it:focus-visible .cap, .pick:hover .cap, .pick:focus-visible .cap, .pick[aria-current="true"] .cap {
+  text-decoration-color: var(--amber); text-decoration-thickness: 0.11em;
+}
+.it .meta { display: block; margin-top: 6px; font-size: 12px; line-height: 1.4; color: var(--pencil); }
+.quote { font-family: var(--hand); line-height: 1.22; transform-origin: 0 60%; }
+.quote-link { display: inline-block; margin-top: 12px; font-size: 13px; }
+.pixelated { image-rendering: pixelated; }
+
+/* ---------- lists: the works without the wall, Also, Elsewhere ---------- */
 .pair { display: grid; grid-template-columns: minmax(0, 1fr); row-gap: 0.4rem; }
 @media (min-width: 60rem) {
-  .pair { grid-template-columns: var(--margin-col) minmax(0, 1fr); column-gap: var(--gap); align-items: baseline; }
+  .pair { grid-template-columns: 14.5rem minmax(0, 1fr); column-gap: clamp(2rem, 4.5vw, 5rem); align-items: baseline; }
   .pair > .m { grid-column: 1; grid-row: 1; }
   .pair > .f { grid-column: 2; grid-row: 1; }
-  .pair.top { align-items: start; }
 }
 .m { color: var(--pencil); }
 .m a { color: var(--ink); }
-
-/* ---------- header and footer ---------- */
-.site-head { row-gap: 0.15rem; }
-.name { color: var(--ink); }
-.name a { text-decoration-color: transparent; }
-.name a:hover, .name a:focus-visible { text-decoration-color: var(--amber); }
-.nav { display: flex; flex-wrap: wrap; column-gap: 1.35rem; row-gap: 0.25rem; }
-.nav a { color: var(--ink); }
-
-/* The Dark/Light word sits at the far end of the header's first line, apart from the pages: on a phone
-   beside the name, on a wide screen past the menu. It shows only when the script that runs it can. */
-.site-head { grid-template-columns: minmax(0, 1fr) auto; column-gap: 1.35rem; align-items: baseline; }
-.site-head > .name { grid-column: 1; grid-row: 1; }
-.site-head > nav { grid-column: 1 / -1; grid-row: 2; }
-.theme-toggle {
-  grid-column: 2; grid-row: 1; justify-self: end;
-  display: none; font: inherit; color: var(--pencil); background: none; border: 0; border-radius: 0;
-  padding: 0.6rem; margin: -0.6rem;   /* a thumb-sized target, the same look */
-  cursor: pointer; -webkit-tap-highlight-color: transparent;
-  text-decoration-line: underline; text-decoration-color: transparent; text-decoration-thickness: 0.125em;
-  text-underline-offset: 0.24em; text-decoration-skip-ink: none;
-}
-.js .theme-toggle { display: inline-block; }
-@media (hover: hover) {
-  .theme-toggle:hover { color: var(--ink); text-decoration-color: var(--amber); text-decoration-thickness: 0.3em; }
-}
-.theme-toggle:focus-visible { color: var(--ink); text-decoration-color: var(--amber); outline: 2px solid var(--ink); outline-offset: -0.1rem; }
-.theme-toggle .to-light { display: none; }
-:root[data-theme="dark"] .theme-toggle .to-dark { display: none; }
-:root[data-theme="dark"] .theme-toggle .to-light { display: inline; }
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .theme-toggle .to-dark { display: none; }
-  :root:not([data-theme="light"]) .theme-toggle .to-light { display: inline; }
-}
-@media (min-width: 60rem) {
-  .site-head { grid-template-columns: var(--margin-col) minmax(0, 1fr) auto; column-gap: var(--gap); }
-  .site-head > nav { grid-column: 2; grid-row: 1; }
-  .theme-toggle { grid-column: 3; }
-}
-
-.site-foot { margin-top: clamp(5rem, 12vw, 9rem); }
-@media (min-width: 60rem) { .site-foot > .m { grid-column: 1 / -1; } }
-
-/* ---------- media: live embeds and stills, or visible placeholders ---------- */
-.media { width: min(100%, calc(74vh * var(--arn, 1.3333))); aspect-ratio: var(--ar, 4 / 3); }
-/* every framed work gets the same hairline as the viewers; --media-bg suits a light work while it loads */
-.media iframe, .media img, .media video { display: block; width: 100%; height: 100%; border: 1px solid var(--rule); object-fit: contain; background: var(--media-bg, var(--well)); }
-/* a video's frame always has the video's own shape, so "fill" scales it exactly as "contain" would,
-   without the pixel of background some browsers leave at the right edge */
-.media video, .series-video { object-fit: fill; }
-.ph {
-  display: grid; place-items: center;
-  width: 100%; height: 100%;
-  border: 1px dashed var(--pencil);
-  color: var(--pencil);
-  font-family: var(--mono);
-  font-size: 0.8125rem;
-  padding: 1.25rem;
-  text-align: center;
-}
-.ph-inline { color: var(--pencil); font-family: var(--mono); }
-/* pixel art keeps hard edges at any size */
-.pixelated { image-rendering: pixelated; }
-
-/* ---------- works index ---------- */
-.index { margin-top: clamp(3rem, 9vw, 6.5rem); }
+.index { margin-top: clamp(40px, 5vw, 80px); }
 .entry + .entry { margin-top: clamp(1.4rem, 3.2vw, 2.25rem); }
 .entry .f { font-size: clamp(2.1rem, 4.6vw, 3.4rem); line-height: 1.2; }
-.entry .m { margin-top: 0.1rem; }
+.also { margin-top: clamp(48px, 6vw, 96px); display: flex; flex-wrap: wrap; gap: 8px 40px; align-items: baseline; }
+.also-h { color: var(--pencil); }
+.also .note { color: var(--pencil); }
 
-/* the rest of the record: logged, not written */
-.also { margin-top: clamp(3.5rem, 9vw, 6.5rem); }
-.also-list { margin-top: 0.9rem; }
-.also-entry { row-gap: 0.1rem; }
-.also-entry + .also-entry { margin-top: 1rem; }
-.also-entry .f { font-size: 1rem; line-height: 1.5; }
-
-/* ---------- a work ---------- */
-.work { margin-top: clamp(3rem, 8vw, 6rem); display: grid; grid-template-columns: minmax(0, 1fr); }
-.work-title { font-size: clamp(2.75rem, 7.5vw, 5.5rem); line-height: 1.12; text-wrap: balance; }
-.work-meta { margin-top: 1.1rem; }
-.spec li, .ext li { line-height: 1.7; }
-.ext { margin-top: 0.9rem; }
-.work .media { margin-top: clamp(1.75rem, 5vw, 3rem); }
-.media-note { margin-top: 0.6rem; color: var(--pencil); }
-/* a series: one work at a time, in order, opening on any of them */
-/* a series that gives its shape (--arn, width over height) stays within 74% of the screen's height */
-.series { margin-top: clamp(1.75rem, 5vw, 3rem); max-width: 60rem; width: min(100%, calc(74vh * var(--arn, 100))); }
-.series-frame { position: relative; aspect-ratio: var(--frame, 16 / 10); }
-.series-live, .series-frame .ph { position: absolute; inset: 0; width: 100%; height: 100%; }
-.series-live { display: block; border: 1px solid var(--rule); background: var(--live-bg, var(--well)); }
-.series-img { display: block; width: 100%; height: auto; border: 1px solid var(--rule); cursor: pointer; }
-.series-video { display: block; width: 100%; height: auto; border: 1px solid var(--rule); background: var(--well); cursor: pointer; }
-/* the button keeps its place under the frame's right edge, however long the title runs */
-.series-note { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; column-gap: 1.25rem; }
-.series-next { display: none; font: inherit; color: var(--ink); background: none; border: 0; padding: 0; cursor: pointer;
-  text-decoration-line: underline; text-decoration-color: var(--amber); text-decoration-thickness: 0.125em; text-underline-offset: 0.24em; }
-.js .series-next { display: inline; }
-.js .series-next[hidden] { display: none; }
-.series-next:hover { text-decoration-thickness: 0.3em; }
-.series-next:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
-.js .series:not(.is-ready) .series-title { visibility: hidden; }
-.work .prose { margin-top: clamp(2rem, 5vw, 3.25rem); }
-.record { margin-top: 2.25rem; color: var(--pencil); }
-.record p + p { margin-top: 0.15rem; }
-@media (min-width: 60rem) {
-  .work { grid-template-columns: var(--margin-col) minmax(0, 1fr); column-gap: var(--gap); }
-  .work > * { grid-column: 2; }
-  .work > .work-meta {
-    grid-column: 1; grid-row: 1 / span 6;
-    margin-top: 0; align-self: start;
-    position: sticky; top: calc(env(safe-area-inset-top, 0px) + 2rem);
-    padding-top: 0.6rem;
-  }
+/* ---------- a work: the frame, then everything said about it ---------- */
+.work { display: flex; flex-direction: column; align-items: flex-start; gap: 32px; margin-top: clamp(24px, 3vw, 44px); }
+/* the frame keeps the work's own shape, never cropped, and stays within 74% of the screen's height */
+.stage { flex: 0 1 auto; width: min(100%, 860px, calc(74vh * var(--arn, 1))); min-width: 0; }
+/* side by side on a wide screen, where the work stays in view while its words are read */
+@media (min-width: 64rem) {
+  .work { flex-direction: row; gap: clamp(32px, 4vw, 64px); }
+  .stage { position: sticky; top: calc(84px + env(safe-area-inset-top, 0px)); }
 }
+.viewer { border: 1px solid var(--rule); }
+.strip { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; padding: 8px 12px; font-size: 12px; line-height: 15px; }
+.viewer > .strip:first-child { border-bottom: 1px solid var(--rule); }
+.strip.low { border-top: 1px solid var(--rule); color: var(--pencil); }
+.v-title { min-width: 0; overflow-wrap: anywhere; }
+.v-ctl { display: flex; gap: 18px; align-items: baseline; white-space: nowrap; }
+.v-pos { color: var(--pencil); }
+.series-next { display: none; }
+.js .series-next { display: inline; }
+.js .series:not(.is-ready) .v-title { visibility: hidden; }
+.clock { min-width: 8ch; text-align: right; }
+.frame { position: relative; aspect-ratio: var(--ar, 1); background: var(--well); }
+.frame > img, .frame > video, .frame > iframe, .frame > .ph {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0; object-fit: contain;
+  background: var(--media-bg, transparent);
+}
+.frame > video { object-fit: fill; }
+.frame > iframe { background: var(--live-bg, var(--well)); }
+.series .frame > .series-img, .series .frame > .series-video { cursor: pointer; }
+.ph { display: grid; place-items: center; color: var(--pencil); padding: 1.25rem; text-align: center; }
+.media-note { margin-top: 10px; color: var(--pencil); }
+
+.about { flex: 1 0 400px; max-width: 560px; min-width: 0; display: flex; flex-direction: column; gap: 24px; }
+@media (max-width: 63.99rem) { .about { flex: none; width: 100%; } }
+.work-title { font-size: clamp(40px, 5vw, 76px); line-height: 1.05; text-wrap: balance; }
+.count { display: none; color: var(--pencil); }
+.js .count { display: block; }
+.dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; background: var(--amber); margin-right: 9px; vertical-align: 1px; }
+.spec { color: var(--pencil); }
+.ext li + li { margin-top: 6px; }
+.record { color: var(--pencil); }
+.record p + p { margin-top: 0.15rem; }
+
+/* the whole series, laid out by chance under the frame; a tap opens one above */
+.set { margin-top: clamp(56px, 6vw, 96px); padding-top: 16px; border-top: 1px solid var(--rule); }
+.set-h { color: var(--pencil); font-size: 13px; }
+.set .wall { margin-top: 28px; }
 
 /* ---------- prose in the hand ---------- */
-.prose { font-family: var(--hand); font-size: clamp(1.3125rem, 1.25rem + 0.25vw, 1.4375rem); line-height: 1.7; max-width: 34em; text-wrap: pretty; }
+.prose { font-family: var(--hand); font-size: clamp(1.3125rem, 1.25rem + 0.25vw, 1.4375rem); line-height: 1.6; max-width: 34em; text-wrap: pretty; }
 .prose p + p, .prose p + ul, .prose ul + p, .prose blockquote + p, .prose p + blockquote { margin-top: 0.95em; }
 .prose h2 { font-size: 1.55em; line-height: 1.25; margin-top: 1.7em; margin-bottom: 0.35em; }
 .prose .sep { margin-top: 1.4em; }
@@ -254,16 +253,14 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .prose .url { font-size: 0.62em; overflow-wrap: anywhere; }
 .prose h2 + p { margin-top: 0; }
 
-.pager { margin-top: clamp(3.5rem, 8vw, 6rem); }
-.pager .f { display: flex; flex-wrap: wrap; gap: 1.1rem 3rem; }
-/* only the destination is underlined, never the Previous/Next label, and only on hover or focus,
-   like the titles on the Works list */
-.pager a { text-decoration: none; }
-.pager a .hand { text-decoration-line: underline; text-decoration-color: transparent; text-decoration-thickness: 0.07em;
-  text-underline-offset: 0.2em; text-decoration-skip-ink: none; }
-.pager a:hover .hand, .pager a:focus-visible .hand { text-decoration-color: var(--amber); text-decoration-thickness: 0.16em; }
-.pager .lbl { display: block; color: var(--pencil); }
-.pager .hand { font-size: 1.6rem; line-height: 1.3; }
+/* ---------- previous and next ---------- */
+.pager { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 24px 48px; margin-top: clamp(48px, 5vw, 80px); padding-top: 18px; border-top: 1px solid var(--rule); }
+.pager a { display: flex; flex-direction: column; text-decoration: none; }
+.pager a.next { align-items: flex-end; margin-left: auto; text-align: right; }
+/* only the destination is underlined, never the label, and only on hover or focus */
+.pager .hand { font-size: 32px; line-height: 1.2; text-decoration-line: underline; text-decoration-color: transparent; text-decoration-thickness: 0.06em; text-underline-offset: 0.16em; text-decoration-skip-ink: none; }
+.pager a:hover .hand, .pager a:focus-visible .hand { text-decoration-color: var(--amber); text-decoration-thickness: 0.11em; }
+.pager .lbl { color: var(--pencil); }
 
 /* ---------- statement ---------- */
 .statement { margin-top: clamp(3rem, 8vw, 6rem); }
@@ -274,10 +271,6 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .numeral { color: var(--pencil); }
 .mv-title { font-family: var(--hand); font-size: clamp(1.75rem, 3.6vw, 2.75rem); line-height: 1.2; }
 .movement .prose { margin-top: 0.6rem; }
-
-/* ---------- home: the bio, in his hand ---------- */
-.home { margin-top: clamp(3.5rem, 11vh, 8rem); }
-.bio { font-family: var(--hand); font-size: clamp(1.4rem, 1.15rem + 1.1vw, 2.15rem); line-height: 1.6; max-width: 26em; text-wrap: pretty; }
 
 /* ---------- elsewhere: social first, then the art platforms ---------- */
 .elsewhere { margin-top: clamp(3rem, 9vw, 6.5rem); }
@@ -293,11 +286,7 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 .lost h1 { font-family: var(--hand); font-size: clamp(2.75rem, 7.5vw, 5.5rem); line-height: 1.15; }
 .lost p { margin-top: 1.5rem; }
 
-@media (min-width: 60rem) {
-  body { font-size: 0.875rem; }
-}
-
-/* ---------- the hand, written fresh on every visit (see hand.js) ---------- */
+/* ---------- the hand, written fresh on every visit (see hand.js and wall.js) ---------- */
 .hw-ink span { font-feature-settings: "calt" 0; }
 .hw-ink .hw-keep { white-space: nowrap; }
 .hw-ink .v1 { font-feature-settings: "calt" 0, "ss01" 1; }
@@ -313,3 +302,8 @@ a:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 /* Hold the hand until it has been written, so nothing visibly changes. Failsafe if the script never runs. */
 .js .hand:not(.is-written) { visibility: hidden; animation: hw-failsafe 0s linear 2.5s forwards; }
 @keyframes hw-failsafe { to { visibility: visible; } }
+
+@media (prefers-reduced-motion: reduce) {
+  html, body, .hd { transition: none; }
+  .it img, .it video, .pick img { transition: none; }
+}

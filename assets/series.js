@@ -1,10 +1,12 @@
 /* series.js
-   One frame per series. Each visit opens on the first work. "Show another", or a tap on
-   a still image, steps to the next work in order and starts over after the last. Live works play
-   in the frame itself, loaded from where they were minted; a tap there belongs to the work.
+   One frame per series. Each visit opens on the first work, or on the one the address names (#slug).
+   "Show another", on the frame's top edge beside "3 of 20", or a tap on a still or a moving work,
+   steps to the next work in order and starts over after the last. Live works play in the frame
+   itself, loaded from where they were minted; a tap there belongs to the work.
    A still can load from where it was minted too (an https link), like a GIF an owner chose.
    A moving work too heavy to show as minted plays as a silent, looping video of the same frames;
    a tap on it steps, as with a still.
+   The wall of the whole series below the frame (wall.js) can open any work here.
    The page address follows along (#slug), so any single work can be linked.
    Nothing is stored and nothing is sent. */
 (function () {
@@ -21,7 +23,8 @@
     var name = fig.getAttribute("data-name") || "";
     var sizes = fig.getAttribute("data-sizes") || "100vw";
     var frame = fig.querySelector(".series-frame");
-    var title = fig.querySelector(".series-title");
+    var title = fig.querySelector(".v-title");
+    var pos = fig.querySelector(".v-pos");
     var next = fig.querySelector(".series-next");
     var linked = !window.__PREVIEW__;
     var img = null, i = 0;
@@ -75,7 +78,7 @@
           o.type = s[1];
           v.appendChild(o);
         });
-        v.addEventListener("click", step);
+        if (list.length > 1) v.addEventListener("click", step);
         place(v);
         img = null;
       } else if (d.embed) {
@@ -93,7 +96,7 @@
           img = document.createElement("img");
           img.className = "series-img";
           img.decoding = "async";
-          img.addEventListener("click", step);
+          if (list.length > 1) img.addEventListener("click", step);
           place(img);
         }
         img.width = d.w;
@@ -101,18 +104,30 @@
         img.alt = d.alt;
         load(img, d);
       }
+      i = k;
       title.textContent = d.title;
+      if (pos) pos.textContent = (k + 1) + " of " + list.length;
       if (follow && linked && window.history && history.replaceState) history.replaceState(null, "", "#" + d.slug);
       var n = list[(k + 1) % list.length];
       if (n.src && n !== d && !(remote(n) && window.__PREVIEW__)) load(new Image(), n);
+      var e;
+      try { e = new CustomEvent("series:change", { detail: { index: k } }); }
+      catch (x) { e = document.createEvent("CustomEvent"); e.initCustomEvent("series:change", false, false, { index: k }); }
+      fig.dispatchEvent(e);
     }
 
-    function step() { if (list.length > 1) { i = (i + 1) % list.length; show(i, true); } }
+    function step() { if (list.length > 1) show((i + 1) % list.length, true); }
 
-    i = start(list, linked ? decodeURIComponent(location.hash.slice(1)) : "");
-    show(i, false);
+    /* the wall below asks for a particular work */
+    fig.addEventListener("series:show", function (e) {
+      var k = e.detail ? e.detail.index : -1;
+      if (k >= 0 && k < list.length) show(k, true);
+    });
+    fig.seriesCurrent = function () { return i; };
+
+    show(start(list, linked ? decodeURIComponent(location.hash.slice(1)) : ""), false);
     if (list.length > 1) next.addEventListener("click", step);
-    else next.hidden = true;
+    else { next.hidden = true; if (pos) pos.hidden = true; }
     fig.classList.add("is-ready");
   }
 
