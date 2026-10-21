@@ -194,16 +194,19 @@ footer.
 ## Share cards
 
 When a work's page is shared, on X or in a message, the card shows the work: `assets/share/<page>.jpg`,
-1200 × 630, the whole artwork on the paper color beside its title in the hand, never cropped. Moving works
-use one clear frame. Work pages are titled "Deathbed by Stephen Biernacki".
+1200 × 630, the whole artwork on the paper color beside its title in the hand, never cropped, with the
+footer's bar of the day under the name. Moving works use one clear frame. The live works use the picture
+the front page hangs for them, except UNBECOMING, whose card shows the work its page opens on. Work pages
+are titled "Deathbed by Stephen Biernacki". Pages ask for the cards as `<page>.jpg?v=2`.
 
-The front page, the Statement, Elsewhere, and the live works without a card of their own yet (Alien
-Invasion of Privacy, Vestige, Self-Addressed, UNBECOMING, Untitled (For Jo)) use the site's own card,
+The front page, the Statement, Elsewhere and the not-found page use the site's own card,
 `assets/og.png`: the name in the hand across the colors the site takes through one day, from midnight
-to midnight, each letter in the ink the site uses on the color behind it. Its colors come from the list
-at the top of `assets/light.js`, so if those change, the card should be drawn again. Pages ask for it
-as `og.png?v=2`; raise the number whenever the card changes, so that services which kept a copy of the
-old one fetch the new one.
+to midnight, each letter in the ink the site uses on the color behind it. Pages ask for it as
+`og.png?v=2`.
+
+Both kinds of card take the day's colors from the list at the top of `assets/light.js`, so if those
+change, the cards should be drawn again. Raise the number after `?v=` whenever a card changes, so that
+services which kept a copy of the old one fetch the new one.
 
 ## Fonts
 
