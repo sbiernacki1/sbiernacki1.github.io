@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>The site's share card</title>
+<!-- The site's own share card, The day (assets/og.png). tools/site_card.py draws this page at twice the size and
+     brings it down to 1200 x 630. The colors and inks are assets/light.js's, the drawings of each letter are
+     assets/hand.js's, picked by a seeded chance: ?seed=N tries other drawings (the card on the site is 7919). -->
+<style>
+@font-face { font-family: "Stephen Hand"; src: url("../assets/fonts/StephenHand-Regular.woff2") format("woff2"); font-display: block; }
+@font-face { font-family: "Fragment Mono"; src: url("../assets/fonts/FragmentMono-Regular.woff2") format("woff2"); font-display: block; }
+:root { --paper: #FAFAF8; --ink: #1C1B18; --hand: "Stephen Hand", cursive; --mono: "Fragment Mono", ui-monospace, monospace; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1200px; height: 630px; overflow: hidden; }
+body { background: var(--paper); color: var(--ink); position: relative; -webkit-font-smoothing: antialiased; }
+.hand { font-family: var(--hand); font-feature-settings: "calt" 0; }
+.hw span { font-feature-settings: "calt" 0; }
+.hw .v1 { font-feature-settings: "calt" 0, "ss01" 1; }
+.hw .v2 { font-feature-settings: "calt" 0, "ss02" 1; }
+.hw .v3 { font-feature-settings: "calt" 0, "ss03" 1; }
+.hw .v4 { font-feature-settings: "calt" 0, "ss04" 1; }
+.hw .v5 { font-feature-settings: "calt" 0, "ss05" 1; }
+.hw .v6 { font-feature-settings: "calt" 0, "ss06" 1; }
+.hw .v7 { font-feature-settings: "calt" 0, "ss07" 1; }
+.hw .v8 { font-feature-settings: "calt" 0, "ss08" 1; }
+.hw .v9 { font-feature-settings: "calt" 0, "ss09" 1; }
+body { background: var(--day); }
+.name { position: absolute; left: 0; right: 0; top: 300px; transform: translateY(-50%); text-align: center; font-size: 118px; line-height: 1; white-space: nowrap; }
+.hours { position: absolute; left: 0; right: 0; bottom: 34px; font: 22px/1 var(--mono); }
+.hours span { position: absolute; transform: translateX(-50%); }
+</style>
+</head>
+<body>
+<div class="name hand" id="n">Stephen Biernacki</div>
+<div class="hours" id="hrs"></div>
+<script>
+/* the paper through the day, and the ink and pencil on it, worked out as assets/light.js does */
+var PAPER = [[0, "#121110"], [4.5, "#16151C"], [5.75, "#2B2C3C"], [6.75, "#8E8798"], [7.5, "#DCD6DA"], [9.5, "#F4F2ED"],
+  [12, "#FAFAF8"], [15.5, "#F7F2E8"], [17.75, "#EEDCBA"], [18.75, "#E3C08E"], [19.75, "#4A3F4E"], [20.75, "#1F2230"],
+  [22, "#121110"], [24, "#121110"]];
+var DARK_INK = [28, 27, 24], LIGHT_INK = [236, 232, 224];
+function rgb(hex) { return [parseInt(hex.slice(1, 3), 16), parseInt(hex.slice(3, 5), 16), parseInt(hex.slice(5, 7), 16)]; }
+function lum(c) {
+  var v = c.map(function (x) { x = x / 255; return x <= 0.03928 ? x / 12.92 : Math.pow((x + 0.055) / 1.055, 2.4); });
+  return 0.2126 * v[0] + 0.7152 * v[1] + 0.0722 * v[2];
+}
+function contrast(a, b) { var x = lum(a), y = lum(b); return (Math.max(x, y) + 0.05) / (Math.min(x, y) + 0.05); }
+function css(c) { return "rgb(" + c.map(Math.round).join(", ") + ")"; }
+function light(h) {
+  var a = PAPER[0], b = PAPER[1];
+  for (var i = 0; i < PAPER.length - 1; i++) if (h >= PAPER[i][0] && h <= PAPER[i + 1][0]) { a = PAPER[i]; b = PAPER[i + 1]; break; }
+  var f = (h - a[0]) / Math.max(0.0001, b[0] - a[0]);
+  var ca = rgb(a[1]), cb = rgb(b[1]);
+  var paper = [0, 1, 2].map(function (j) { return Math.round(ca[j] + (cb[j] - ca[j]) * f); });
+  var dark = contrast(DARK_INK, paper) >= contrast(LIGHT_INK, paper);
+  var ink = dark ? DARK_INK : LIGHT_INK;
+  if (contrast(ink, paper) < 4.5) ink = dark ? [0, 0, 0] : [255, 255, 255];
+  var alpha = 0.66, pencil;
+  for (;;) {
+    pencil = [0, 1, 2].map(function (j) { return ink[j] * alpha + paper[j] * (1 - alpha); });
+    if (alpha >= 1 || contrast(pencil, paper) >= 4.5) break;
+    alpha = Math.min(1, alpha + 0.02);
+  }
+  return { paper: css(paper), ink: css(ink), pencil: css(pencil) };
+}
+var DAY = "linear-gradient(90deg, " + PAPER.map(function (k) { return k[1] + " " + +(k[0] / 24 * 100).toFixed(2) + "%"; }).join(", ") + ")";
+
+/* the name in the hand, each letter one of its drawings, picked by a seeded chance as assets/hand.js picks
+   them: every drawing equally likely, never the same drawing twice running for a letter */
+function rng(seed) { var s = seed >>> 0 || 1; return function () { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return ((s >>> 0) % 1e9) / 1e9; }; }
+function write(el, seed, versions) {
+  var r = rng(seed), last = {}, text = el.textContent;
+  el.textContent = "";
+  el.classList.add("hw");
+  Array.from(text).forEach(function (ch) {
+    var s = document.createElement("span"), opts = versions[ch], k = 0;
+    if (opts) { do { k = +opts.charAt(Math.floor(r() * opts.length)); } while (k === last[ch] && opts.length > 1); }
+    last[ch] = k;
+    if (k) s.className = "v" + k;
+    s.textContent = ch;
+    el.appendChild(s);
+  });
+}
+
+document.body.style.setProperty("--day", DAY);
+var q = new URLSearchParams(location.search), n = document.getElementById("n");
+fetch("../assets/hand.js").then(function (r) { return r.text(); }).then(function (js) {
+  var versions = JSON.parse(js.match(/VERSIONS\s*=\s*(\{.*?\})\s*[;,]/s)[1]);
+  write(n, q.has("seed") ? +q.get("seed") : 7919, versions);
+  var hrs = document.getElementById("hrs");
+  [[0, "Midnight"], [12, "Noon"], [24, "Midnight"]].forEach(function (k) {
+    var s = document.createElement("span"), pad = 40;
+    s.textContent = k[1];
+    s.style.left = Math.min(1200 - pad, Math.max(pad, k[0] / 24 * 1200)) + "px";
+    if (k[0] === 0) { s.style.left = pad + "px"; s.style.transform = "none"; }
+    if (k[0] === 24) { s.style.left = "auto"; s.style.right = pad + "px"; s.style.transform = "none"; }
+    s.style.color = light(Math.min(23.99, k[0])).pencil;
+    hrs.appendChild(s);
+  });
+  /* each letter takes the ink the site would use on the paper under its middle */
+  document.fonts.ready.then(function () {
+    Array.from(n.querySelectorAll("span")).forEach(function (s) {
+      var b = s.getBoundingClientRect(), x = (b.left + b.right) / 2;
+      s.style.color = light(Math.max(0, Math.min(24, x / 1200 * 24))).ink;
+    });
+    window.READY = true;
+  });
+});
+</script>
+</body>
+</html>

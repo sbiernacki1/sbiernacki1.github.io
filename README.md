@@ -3,6 +3,42 @@
 Plain HTML, CSS, and a little JavaScript. No framework, no build step, no cookies, no analytics.
 Every page is a folder with an `index.html`, so URLs stay clean (`/works/vestige/`).
 
+## Making a change
+
+The pages are plain files, edited directly: nothing generates them. To change the site:
+
+1. Edit the files. To add a work, see Adding a work below.
+2. Run `python3 tools/check.py` and fix whatever it reports.
+3. Commit and push to `main`. GitHub Pages puts it online within a minute or two.
+
+`tools/` holds the helpers. The site doesn't use them: they make files for it and check it.
+
+- `check.py` checks the whole site before a commit: every file a page asks for is here, the front
+  page's list and wall agree, Previous and Next run in order, every work page has its own share card,
+  the `?v=` numbers match, no page says Buy, gives a price or shows an email address, and no new
+  text has an em dash.
+- `share_card.py` draws a work's share card. `share_card.py --check` shows whether a machine draws
+  them exactly as the site's were drawn.
+- `site_card.py` draws the site's own share card, from `site_card.html`.
+- `loop.py` makes a moving work's loop for the walls.
+
+They need Python 3 with Pillow and beautifulsoup4, ffmpeg for loops and for frames taken from videos,
+and Playwright with its Chromium for the site's card.
+
+## House rules
+
+- Every line on the site is literally true. What can't be said plainly and truly is left out.
+- Plain words, the way Stephen would say them out loud. New text has no em dashes.
+- Works are shown whole, exactly as minted, never cropped.
+- Links to where a work lives say View ("View on Verse"), never Buy. No prices anywhere.
+- Anything missing is left out, with no placeholder.
+- Only released work appears. No email address appears anywhere.
+- Each work's record says how it was made, and names AI wherever it was used, as the Statement
+  promises. Other tools are named as Stephen names them.
+- The site's words match Stephen's bio canon, his file of the tagline, the bios and the Statement.
+  It isn't kept here, since everything here is public. When the words change here, the canon
+  changes in the same sitting; ask him for it.
+
 ## Put it online (GitHub Pages + stephenbiernacki.com)
 
 1. Repository `sbiernacki1.github.io` (public) holds these files at its root, with `index.html` at the top level.
@@ -151,6 +187,12 @@ the works in the block's order. Then update the Previous/Next
 links on its neighbors.
 The last work's Next link goes to the Statement, so a walk through the works ends there.
 
+Give it a share card: add a line for it to `CARDS` in `tools/share_card.py` and run
+`python3 tools/share_card.py <page>`. Its page asks for the card as the others do, with the same `?v=`
+number, and with an `og:image:alt` that describes the picture: the title of the work shown, then what
+it shows. A moving work's loop for the walls comes from `python3 tools/loop.py`. Then run
+`python3 tools/check.py`.
+
 Every work with a page is on the front page, and only those: the rest of what is minted is a link
 away on Elsewhere (Verse, Objkt and the others).
 A page with no words (Ephemeron, Process) simply has none: the frame and the record.
@@ -205,8 +247,10 @@ to midnight, each letter in the ink the site uses on the color behind it. Pages 
 `og.png?v=2`.
 
 Both kinds of card take the day's colors from the list at the top of `assets/light.js`, so if those
-change, the cards should be drawn again. Raise the number after `?v=` whenever a card changes, so that
-services which kept a copy of the old one fetch the new one.
+change, the cards should be drawn again: copy the new list into `tools/share_card.py` and
+`tools/site_card.html`, then run `python3 tools/share_card.py --all` and `python3 tools/site_card.py`.
+Raise the number after `?v=` whenever a card changes, so that services which kept a copy of the old one
+fetch the new one.
 
 ## Fonts
 
