@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>My Hand Without Me, the film</title>
+<!-- The film on My Hand Without Me's page, drawn one frame at a time by tools/my_hand_without_me_film.py.
+     A ruled page holds one sentence, written again on every line. The film opens on page A, full.
+     It clears, page B is written line by line, letter by letter, rests and clears, then page A is
+     written again, so the film's last frame meets its first and it loops without a seam. No page
+     follows itself, and no two lines are drawn alike.
+     The drawings are picked as assets/hand.js picks them: every drawing equally likely, and a letter
+     never repeats the drawing it used last on the page. window.frame(t) draws the moment t seconds in.
+     ?seed=N tries other drawings. -->
+<style>
+@font-face { font-family: "Stephen Hand"; src: url("../assets/fonts/StephenHand-Regular.woff2") format("woff2"); font-display: block; }
+:root { --paper: #FAFAF8; --ink: #1C1B18; --rule: rgba(28, 27, 24, 0.15); }
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { width: 1080px; height: 1080px; overflow: hidden; background: var(--paper); }
+.rule { position: absolute; height: 1px; background: var(--rule); }
+.line { position: absolute; white-space: nowrap; color: var(--ink); font-family: "Stephen Hand", cursive;
+        line-height: 1; padding: 40px 0; -webkit-font-smoothing: antialiased; font-feature-settings: "calt" 0; }
+.line .base { display: inline-block; width: 0; height: 0; vertical-align: baseline; }
+.hw span { font-feature-settings: "calt" 0; }
+.hw .v1 { font-feature-settings: "calt" 0, "ss01" 1; } .hw .v2 { font-feature-settings: "calt" 0, "ss02" 1; }
+.hw .v3 { font-feature-settings: "calt" 0, "ss03" 1; } .hw .v4 { font-feature-settings: "calt" 0, "ss04" 1; }
+.hw .v5 { font-feature-settings: "calt" 0, "ss05" 1; } .hw .v6 { font-feature-settings: "calt" 0, "ss06" 1; }
+.hw .v7 { font-feature-settings: "calt" 0, "ss07" 1; } .hw .v8 { font-feature-settings: "calt" 0, "ss08" 1; }
+.hw .v9 { font-feature-settings: "calt" 0, "ss09" 1; }
+</style>
+</head>
+<body>
+<script>
+var q = new URLSearchParams(location.search);
+var SIZE = +(q.get("size") || 38), LINES = +(q.get("lines") || 10), PITCH = +(q.get("pitch") || 84), LEFT = 100;
+var TEXT = "The quick brown fox jumps over the lazy dog.";
+var SPEED = 760;         /* how fast the pen crosses a word, in pixels a second */
+var GAP = 0.07;          /* the pause at each space, in seconds */
+var NEXT = 0.32;         /* the pause before each new line */
+var REST = 2.2, CLEAR = 0.6, BLANK = 0.35;
+
+function rng(seed) { var s = seed >>> 0 || 1; return function () { s ^= s << 13; s ^= s >>> 17; s ^= s << 5; return ((s >>> 0) % 1e9) / 1e9; }; }
+function smooth(x) { x = Math.max(0, Math.min(1, x)); return x * x * (3 - 2 * x); }
+
+/* one page: LINES copies of the sentence, with one record of the last drawing per letter, as on the site */
+function page(seed, versions) {
+  var r = rng(seed), last = Object.create(null), lines = [];
+  for (var i = 0; i < LINES; i++) {
+    lines.push(Array.from(TEXT).map(function (ch) {
+      var opts = versions[ch], k = 0;
+      if (opts) { do { k = +opts.charAt(Math.floor(r() * opts.length)); } while (k === last[ch] && opts.length > 1); last[ch] = k; }
+      return k;
+    }));
+  }
+  return lines;
+}
+
+var A, B, top0, L = 0;
+function build(versions) {
+  var seed = q.has("seed") ? +q.get("seed") : 1662;
+  var pa = page(seed, versions), pb = page(seed * 7 + 3, versions);
+  /* rules first, under the writing */
+  top0 = Math.round((1080 - (LINES - 1) * PITCH) / 2 + SIZE * 0.3);
+  for (var i = 0; i < LINES; i++) {
+    var r = document.createElement("div");
+    r.className = "rule";
+    r.style.left = LEFT + "px"; r.style.right = LEFT + "px"; r.style.top = (top0 + i * PITCH) + "px";
+    document.body.appendChild(r);
+  }
+  A = layer(pa); B = layer(pb);
+}
+function layer(lines) {
+  return lines.map(function (picks, i) {
+    var d = document.createElement("div");
+    d.className = "line hw";
+    d.style.fontSize = SIZE + "px";
+    d.style.left = LEFT + "px";
+    Array.from(TEXT).forEach(function (ch, j) {
+      var s = document.createElement("span");
+      if (picks[j]) s.className = "v" + picks[j];
+      s.textContent = ch;
+      d.appendChild(s);
+    });
+    var b = document.createElement("span"); b.className = "base"; d.appendChild(b);
+    document.body.appendChild(d);
+    return d;
+  });
+}
+/* sit each line's baseline on its rule, then work out where the pen is at every moment of each page */
+function place() {
+  /* the widest line sets the margins, so the writing sits in the middle of the page */
+  var widest = Math.max.apply(null, A.concat(B).map(function (d) { return d.getBoundingClientRect().width; }));
+  LEFT = Math.round((1080 - widest) / 2);
+  Array.from(document.querySelectorAll(".rule")).forEach(function (r) { r.style.left = LEFT + "px"; r.style.right = LEFT + "px"; });
+  A.concat(B).forEach(function (d) { d.style.left = LEFT + "px"; });
+  [A, B].forEach(function (lines) {
+    lines.forEach(function (d, i) {
+      var base = d.querySelector(".base").getBoundingClientRect().top - d.getBoundingClientRect().top;
+      d.style.top = (top0 + i * PITCH - base) + "px";
+    });
+  });
+  A.pen = route(A); B.pen = route(B);
+  L = 2 * (REST + CLEAR + BLANK) + A.pen.time + B.pen.time;
+}
+/* the pen's way across a page: for each letter, when it starts and ends, and where */
+function route(lines) {
+  var t = 0, steps = [];
+  lines.forEach(function (d, i) {
+    var x0 = d.getBoundingClientRect().left, line = [];
+    if (i > 0) t += NEXT;
+    Array.from(d.querySelectorAll("span:not(.base)")).forEach(function (s, j) {
+      var b = s.getBoundingClientRect(), a = b.left - x0, z = b.right - x0;
+      if (TEXT[j] === " ") { line.push([t, a, t + GAP, z]); t += GAP; }
+      else { var dt = (z - a) / SPEED; line.push([t, a, t + dt, z]); t += dt; }
+    });
+    steps.push(line);
+  });
+  steps.time = t;
+  return steps;
+}
+/* how far along line i of a page the pen has come, in pixels from its left, at w seconds into the writing */
+function reach(lines, i, w) {
+  var steps = lines.pen[i];
+  if (w <= steps[0][0]) return -1;
+  for (var k = 0; k < steps.length; k++) {
+    var s = steps[k];
+    if (w < s[0]) return s[1];
+    if (w <= s[2]) return s[1] + (s[3] - s[1]) * (w - s[0]) / Math.max(1e-6, s[2] - s[0]);
+  }
+  return 1e9;
+}
+function show(lines, opacity, wipe) {
+  lines.forEach(function (d, i) {
+    d.style.opacity = opacity;
+    if (wipe == null) { d.style.webkitMaskImage = "none"; return; }
+    var x = reach(lines, i, wipe);
+    if (x >= 1e9) d.style.webkitMaskImage = "none";
+    else if (x < 0) d.style.webkitMaskImage = "linear-gradient(to right, transparent, transparent)";
+    else d.style.webkitMaskImage = "linear-gradient(to right, #000 " + (x - 5) + "px, transparent " + (x + 2) + "px)";
+  });
+}
+/* one half of the film: a page at rest, cleared, then the other page written */
+function half(t, rest, next) {
+  if (t < REST) { show(rest, 1); show(next, 0); }
+  else if (t < REST + CLEAR) { show(rest, 1 - smooth((t - REST) / CLEAR)); show(next, 0); }
+  else if (t < REST + CLEAR + BLANK) { show(rest, 0); show(next, 0); }
+  else { show(rest, 0); show(next, 1, t - REST - CLEAR - BLANK); }
+}
+window.frame = function (t) {
+  var first = REST + CLEAR + BLANK + B.pen.time;
+  t = ((t % L) + L) % L;
+  if (t < first) half(t, A, B);
+  else half(t - first, B, A);
+};
+fetch("../assets/hand.js").then(function (r) { return r.text(); }).then(function (js) {
+  build(JSON.parse(js.match(/VERSIONS\s*=\s*(\{.*?\})\s*[;,]/s)[1]));
+  return document.fonts.ready;
+}).then(function () {
+  place();
+  window.frame(0);
+  var widths = A.concat(B).map(function (d) { return Math.round(d.getBoundingClientRect().width); });
+  var drawn = A.concat(B).map(function (d) { return Array.from(d.children).map(function (s) { return s.className; }).join(","); });
+  window.INFO = { length: L, writingA: A.pen.time, writingB: B.pen.time, widest: Math.max.apply(null, widths), size: SIZE,
+                  lines: LINES, pitch: PITCH, top: top0, left: LEFT, distinctLines: new Set(drawn).size };
+  window.READY = true;
+});
+</script>
+</body>
+</html>

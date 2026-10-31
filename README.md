@@ -21,6 +21,8 @@ The pages are plain files, edited directly: nothing generates them. To change th
   them exactly as the site's were drawn.
 - `site_card.py` draws the site's own share card, from `site_card.html`.
 - `loop.py` makes a moving work's loop for the walls.
+- `my_hand_without_me_film.py` draws the film on My Hand Without Me's page, from `my_hand_without_me_film.html`,
+  and its loop for the walls.
 
 They need Python 3 with Pillow and beautifulsoup4, ffmpeg for loops and for frames taken from videos,
 and Playwright with its Chromium for the site's card.
@@ -90,8 +92,8 @@ to its part (`#witnessed`, `#remembered`, `#withheld`). The three are plain text
 The wall reads the `wall-data` block at the bottom of `index.html`: each work's title, its record line,
 its page, and a still about 800 pixels wide. A moving work also has a light, silent loop of its own
 frames (640 pixels wide, or the work's own size if smaller, as MP4 and WebM), with its first frame as
-the still. Eight works move on the wall: Alien Invasion of Privacy, Self-Addressed, Ephemeron,
-UNBECOMING, PANOPTICISM, Process, Untitled (For Jo) and Deathbed. Loops play only while they are on
+the still. Nine works move on the wall: My Hand Without Me, Alien Invasion of Privacy, Self-Addressed,
+Ephemeron, UNBECOMING, PANOPTICISM, Process, Untitled (For Jo) and Deathbed. Loops play only while they are on
 screen, and not at all for anyone whose device asks for less motion. Without JavaScript, the plain
 list above the block (`<ol class="index">`) shows instead, so keep the two in step.
 
@@ -214,6 +216,12 @@ The titles on the walls are written by `assets/wall.js` the same way, from the s
 one difference: each arrangement picks them from its own number, so every visit writes them anew. Its
 table also holds how wide each drawing is, so a title's size can be worked out before it is placed.
 That table is generated from the font file too, and needs regenerating with it.
+
+The font is also a work on the site, My Hand Without Me (`works/my-hand-without-me/`). Its page shows a film of
+the font writing one sentence down a ruled page, again and again, then the 24 sheets it was written on,
+whole, resized from the phone scans and otherwise untouched. The film is drawn by
+`tools/my_hand_without_me_film.py`, which picks its drawings the way `hand.js` does. The work isn't minted,
+so its page has no View link.
 
 ## Light
 

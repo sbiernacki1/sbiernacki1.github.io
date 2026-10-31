@@ -29,6 +29,7 @@ SITE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # page: (title as the card shows it, still), the still being a file here, or (video, seconds in)
 CARDS = {
+    "my-hand-without-me": ("My Hand Without Me", "assets/works/my-hand-without-me/my-hand-without-me-poster.jpg"),  # the film's first frame
     "attestations": ("Attestations", "assets/works/attestations/01-dark-adaptation-1600.jpg"),
     "i-want-to-believe": ("I WANT TO BELIEVE", "assets/works/i-want-to-believe/i-want-to-believe-1100.png"),
     "alien-invasion-of-privacy": ("Alien Invasion of Privacy", "assets/works/alien-invasion-of-privacy/alien-invasion-of-privacy-560.png"),
