@@ -220,7 +220,8 @@ and only a confirmed address joins the list; the confirmed page offers Unsubscri
 Stephen choose which posts go to the list (every post is on the web). The
 form is a copy of the one on his HEY World page, sending the same field (`subscriber[email_address]`)
 to the same address (`https://world.hey.com/sbiernacki/subscribers`), with no script, so nothing
-leaves the page until Subscribe is pressed. HEY World offers no form for other sites, so this copy is
+leaves the page until Subscribe is pressed. HEY World's reply opens in a new tab, so Elsewhere stays
+where it was (a screen reader hears "opens in a new tab"). HEY World offers no form for other sites, so this copy is
 not an official feature: if HEY World changes its form and signing up here stops working, replace the
 form with a link to world.hey.com/sbiernacki, which is already the word Email above it.
 
