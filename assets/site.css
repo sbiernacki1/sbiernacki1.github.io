@@ -228,6 +228,9 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .series .frame > .series-img, .series .frame > .series-video { cursor: pointer; }
 .ph { display: grid; place-items: center; color: var(--pencil); padding: 1.25rem; text-align: center; }
 .media-note { margin-top: 10px; color: var(--pencil); }
+/* in Attestations, the first sentence of the work in the frame, under it (series.js shows the one) */
+.ledes { margin-top: 14px; }
+.lede { max-width: 62ch; font-size: 13px; line-height: 1.55; text-wrap: pretty; }
 
 /* under the work: Full screen, and for a live work a tab of its own (view.js). On a computer they show
    while the pointer is over the work or the keyboard reaches them; on a phone they are always there. */
@@ -274,6 +277,20 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .ext li + li { margin-top: 6px; }
 .record { color: var(--pencil); }
 .record p + p { margin-top: 0.15rem; }
+/* the rest of a work's words, folded beside it until asked for (Attestations); the summary reads as a link */
+.att > summary { list-style: none; cursor: pointer; width: max-content; max-width: 100%; }
+.att > summary::-webkit-details-marker { display: none; }
+.att > summary:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+.att .att-hide, .att[open] .att-show { display: none; }
+.att[open] .att-hide { display: inline; }
+.att-text { margin-top: 22px; }
+.att-h { color: var(--pencil); }
+.att-work > * + * { margin-top: 0.95em; }
+.att-work p { text-wrap: pretty; }
+/* a check to paste into an AI that can run code: the instruction, the line, and Copy (copy.js) */
+.paste { padding: 14px 16px 16px; background: var(--well); }
+.paste pre { margin: 0.75em 0 0; font: inherit; font-size: 12px; line-height: 1.55; white-space: pre-wrap; overflow-wrap: anywhere; }
+.paste .copy { display: inline-block; margin-top: 14px; }
 
 /* the whole series, laid out by chance under the frame; a tap opens one above */
 .set { margin-top: clamp(56px, 6vw, 96px); padding-top: 16px; border-top: 1px solid var(--rule); }

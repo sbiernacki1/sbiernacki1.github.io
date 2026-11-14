@@ -65,7 +65,7 @@ and Playwright with its Chromium for the site's card.
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=12` at the end (`assets/site.css?v=12`). After
+Every page links to its stylesheet and scripts with `?v=13` at the end (`assets/site.css?v=13`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.
@@ -112,8 +112,8 @@ browser's frame entirely; on an iPhone, where true full screen is kept for video
 window. Close or Esc comes back. In a series, Show another and the arrow keys still step through. It is
 the same for every work, whatever it is made of, and there is no Open in a new tab, even for a live
 work. On a computer Full screen appears while the pointer is over the work; on a phone it is always
-there, under the work, never on it. There is no download: the files here are display copies, and the
-minted originals are one link away under each work.
+there, under the work, never on it. There is no download button: the frame shows display copies, and
+the minted originals are one link away under each work.
 
 Once a visitor has been with a work for a full minute, a line appears below its title and words: "You
 have been with Deathbed for a minute." It then goes up a minute at a time. Only time with the page in view
@@ -125,6 +125,17 @@ Privacy's "Tap or click a camera to open it.", and UNBECOMING's "Move a cursor o
 work." In a series the line belongs to the works it is true of (an entry's `note` in its `series-data`)
 and shows only while one of them is in the frame: UNBECOMING's live works have it, its five GIF
 versions don't.
+
+Attestations carries each work's own words, copied exactly from the description in its token (only
+the apostrophes are set the site's way). The first sentence sits under the frame. The rest is beside
+the work, folded under Show the full attestation until asked for: the measurements, the presentation,
+and the check. Words that belong to one work carry its slug (`data-work="fresnel"`) and show only while
+that work is in the frame (`assets/series.js`). Each check names its original file, and the file name
+downloads it from `assets/works/attestations/originals`: the ten minted originals, each the same file,
+byte for byte, as its token's image (the SHA-256 in its metadata). Copy, under each check, copies the
+instruction and the line together, ready to paste (`assets/copy.js`). Run on these files, every check
+prints exactly the line its words promise. If a token's description ever changes, change its words here
+to match.
 
 Under a series where every work has a picture here, the whole series hangs on a wall, by chance: the
 order, the sizes and the places are new on every visit (the front page keeps its order, newest first).
