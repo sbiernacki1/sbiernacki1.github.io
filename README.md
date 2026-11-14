@@ -65,7 +65,7 @@ and Playwright with its Chromium for the site's card.
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=13` at the end (`assets/site.css?v=13`). After
+Every page links to its stylesheet and scripts with `?v=14` at the end (`assets/site.css?v=14`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.
@@ -209,6 +209,17 @@ it shows. A moving work's loop for the walls comes from `python3 tools/loop.py`.
 Every work with a page is on the front page, and only those: the rest of what is minted is a link
 away on Elsewhere (Verse, Objkt and the others).
 A page with no words (Ephemeron, Process) simply has none: the frame and the record.
+
+## Updates by email
+
+Elsewhere ends with Updates: an email field and Subscribe. The updates are Stephen's HEY World
+(world.hey.com/sbiernacki): he publishes by sending an email from HEY, each update goes to the
+subscribers by email and stays public there, and HEY World keeps the list. The
+form is a copy of the one on his HEY World page, sending the same field (`subscriber[email_address]`)
+to the same address (`https://world.hey.com/sbiernacki/subscribers`), with no script, so nothing
+leaves the page until Subscribe is pressed. HEY World offers no form for other sites, so this copy is
+not an official feature: if HEY World changes its form and signing up here stops working, replace the
+form with a link to world.hey.com/sbiernacki, which is already the word Email above it.
 
 ## How the handwriting works
 

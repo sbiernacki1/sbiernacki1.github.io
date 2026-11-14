@@ -327,7 +327,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .mv-title { font-family: var(--hand); font-size: clamp(1.75rem, 3.6vw, 2.75rem); line-height: 1.2; }
 .movement .prose { margin-top: 0.6rem; }
 
-/* ---------- elsewhere: social first, then the art platforms ---------- */
+/* ---------- elsewhere: social first, then the art platforms, then updates by email ---------- */
 .elsewhere { margin-top: clamp(3rem, 9vw, 6.5rem); }
 .group + .group { margin-top: clamp(3.5rem, 9vw, 6rem); }
 .group .index { margin-top: 0.9rem; }
@@ -335,6 +335,14 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 .elsewhere .entry + .entry { margin-top: clamp(1.5rem, 3vw, 2.1rem); }
 .elsewhere .entry .f { font-size: clamp(2rem, 4.2vw, 3rem); line-height: 1.15; }
 .elsewhere .entry .m { overflow-wrap: anywhere; }
+/* updates by email: a field and Subscribe. Nothing leaves the page until Subscribe is pressed, and then
+   the address goes to HEY World, which sends the confirmation and the updates (see the README) */
+.sub { display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 22px; margin-top: 0.9rem; max-width: 34rem; }
+.sub input { flex: 1 1 13rem; min-width: 0; font: inherit; font-size: 16px; color: var(--ink); background: transparent;
+             border: 0; border-bottom: 1px solid var(--rule); border-radius: 0; padding: 6px 0 7px; }
+.sub input::placeholder { color: var(--pencil); opacity: 1; }
+.sub input:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+@media (min-width: 60rem) { .sub { grid-column: 2; } }
 
 /* ---------- not found ---------- */
 .lost { margin-top: clamp(4.5rem, 16vh, 11rem); }
