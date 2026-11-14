@@ -214,7 +214,10 @@ A page with no words (Ephemeron, Process) simply has none: the frame and the rec
 
 Elsewhere ends with Updates: an email field and Subscribe. The updates are Stephen's HEY World
 (world.hey.com/sbiernacki): he publishes by sending an email from HEY, each update goes to the
-subscribers by email and stays public there, and HEY World keeps the list. The
+subscribers by email and stays public there, and HEY World keeps the list. Tested on November 14,
+2026: Subscribe leads to HEY World's "You're almost done" page, HEY World emails a confirmation link,
+and only a confirmed address joins the list; the confirmed page offers Unsubscribe, and HEY World lets
+Stephen choose which posts go to the list (every post is on the web). The
 form is a copy of the one on his HEY World page, sending the same field (`subscriber[email_address]`)
 to the same address (`https://world.hey.com/sbiernacki/subscribers`), with no script, so nothing
 leaves the page until Subscribe is pressed. HEY World offers no form for other sites, so this copy is
