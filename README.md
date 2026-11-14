@@ -65,7 +65,7 @@ and Playwright with its Chromium for the site's card.
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=14` at the end (`assets/site.css?v=14`). After
+Every page links to its stylesheet and scripts with `?v=15` at the end (`assets/site.css?v=15`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.

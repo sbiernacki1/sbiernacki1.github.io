@@ -329,7 +329,10 @@ a:focus-visible, button:focus-visible { outline: 2px solid var(--ink); outline-o
 
 /* ---------- elsewhere: social first, then the art platforms, then updates by email ---------- */
 .elsewhere { margin-top: clamp(3rem, 9vw, 6.5rem); }
-.group + .group { margin-top: clamp(3.5rem, 9vw, 6rem); }
+.group + .group { margin-top: clamp(2.5rem, 7vw, 4.5rem); }
+/* each section opens with its name in ink, and from the second on, under the header's own thin line */
+.group-h .m { color: var(--ink); }
+.group + .group .group-h { border-top: 1px solid var(--rule); padding-top: clamp(1.5rem, 3.5vw, 2.5rem); }
 .group .index { margin-top: 0.9rem; }
 .elsewhere .entry { row-gap: 0; }
 .elsewhere .entry + .entry { margin-top: clamp(1.5rem, 3vw, 2.1rem); }
