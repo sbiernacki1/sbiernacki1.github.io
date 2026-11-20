@@ -9,7 +9,7 @@
    A work that asks something of the visitor (a cursor or finger moved over it) has its own line
    under the frame (its note), shown only while that work is in the frame.
    Words on the page that belong to one work carry its slug (data-work="fresnel") and show only
-   while that work is in the frame: in Attestations, each work's first sentence and its attestation.
+   while that work is in the frame: in Attestations, each work's attestation and its name in the link.
    The wall of the whole series below the frame (wall.js) can open any work here.
    The page address follows along (#slug), so any single work can be linked.
    Nothing is stored and nothing is sent. */

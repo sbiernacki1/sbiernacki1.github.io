@@ -65,7 +65,7 @@ and Playwright with its Chromium for the site's card.
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=15` at the end (`assets/site.css?v=15`). After
+Every page links to its stylesheet and scripts with `?v=16` at the end (`assets/site.css?v=16`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.
@@ -127,8 +127,9 @@ and shows only while one of them is in the frame: UNBECOMING's live works have i
 versions don't.
 
 Attestations carries each work's own words, copied exactly from the description in its token (only
-the apostrophes are set the site's way). The first sentence sits under the frame. The rest is beside
-the work, folded under Show the full attestation until asked for: the measurements, the presentation,
+the apostrophes are set the site's way). Nothing of it shows under the frame: the whole attestation
+is beside the work, folded until asked for under Show the full attestation for, and the name of the
+work in the frame. It opens with the work's first sentence, then the measurements, the presentation,
 and the check. Words that belong to one work carry its slug (`data-work="fresnel"`) and show only while
 that work is in the frame (`assets/series.js`). Each check names its original file, and the file name
 downloads it from `assets/works/attestations/originals`: the ten minted originals, each the same file,
