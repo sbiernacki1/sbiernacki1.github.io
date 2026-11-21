@@ -228,12 +228,13 @@ form with a link to world.hey.com/sbiernacki, which is already the word Email ab
 
 ## The portrait
 
-Elsewhere ends with a photo of Stephen, captioned Self-portrait. It comes last in the page, so on a phone
+Elsewhere ends with a photo of Stephen, captioned Self-portrait, 2026: the year he took it. It comes last in the page, so on a phone
 it follows the links and a screen reader reaches it after them. On a computer (60rem and wider) the
 stylesheet stands it to the right of the three sections, level with Social. The files are
 `assets/portrait/stephen-biernacki-720.jpg` and `stephen-biernacki-1440.jpg`: the same 4:5 crop of his
 black-and-white photo at two widths, saved without the camera's details (no date, place or device). To
-change the photo, save the new crop at those two names and sizes, again without the camera's details.
+change the photo, save the new crop at those two names and sizes, again without the camera's details, and
+put the new photo's year in the caption.
 
 ## How the handwriting works
 
