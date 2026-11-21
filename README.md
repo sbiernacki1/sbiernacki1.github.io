@@ -65,7 +65,7 @@ and Playwright with its Chromium for the site's card.
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=16` at the end (`assets/site.css?v=16`). After
+Every page links to its stylesheet and scripts with `?v=17` at the end (`assets/site.css?v=17`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.
@@ -225,6 +225,15 @@ leaves the page until Subscribe is pressed. HEY World's reply opens in a new tab
 where it was (a screen reader hears "opens in a new tab"). HEY World offers no form for other sites, so this copy is
 not an official feature: if HEY World changes its form and signing up here stops working, replace the
 form with a link to world.hey.com/sbiernacki, which is already the word Email above it.
+
+## The portrait
+
+Elsewhere ends with a photo of Stephen, captioned Self-portrait. It comes last in the page, so on a phone
+it follows the links and a screen reader reaches it after them. On a computer (60rem and wider) the
+stylesheet stands it to the right of the three sections, level with Social. The files are
+`assets/portrait/stephen-biernacki-720.jpg` and `stephen-biernacki-1440.jpg`: the same 4:5 crop of his
+black-and-white photo at two widths, saved without the camera's details (no date, place or device). To
+change the photo, save the new crop at those two names and sizes, again without the camera's details.
 
 ## How the handwriting works
 
