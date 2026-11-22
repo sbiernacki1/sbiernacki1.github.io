@@ -65,7 +65,7 @@ and Playwright with its Chromium for the site's card.
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=17` at the end (`assets/site.css?v=17`). After
+Every page links to its stylesheet and scripts with `?v=18` at the end (`assets/site.css?v=18`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.
@@ -143,7 +143,7 @@ order, the sizes and the places are new on every visit (the front page keeps its
 A tap on any work opens it in the frame. A moving work hangs as a light, silent loop of its own (an
 entry's `loop`: 640 pixels, MP4 and WebM, with its first frame as the still). It plays only while it
 is on screen, and not at all for anyone whose device asks for less motion, and its files load only as
-it nears the screen. A live work has no still in the frame, so it hangs as a picture chosen for it: an
+it nears the screen. A live work hangs as a picture chosen for it: an
 entry's `still`, like RED HERR1NG (1'M HERE), or its `loop`, like Self-Addressed's 42, made from its
 token thumbnails (0x01's loop is also the front page's).
 
@@ -186,11 +186,16 @@ file instead of image paths, and plays in the frame. A tap on a live work belong
 
 A series can mix stills and live works, like RED HERR1NG. On the stage, `--arn` (width over height)
 keeps the frame within 74% of the screen's height, and `--live-bg` is the color a live work's frame
-shows while it loads. A still that is small enough is served as the original file, in one size.
-A still can also load from where it was minted, with an https link as its `src`: five UNBECOMING
-owners chose a GIF version of their work, and those show that way, filling the square.
-A moving work too heavy to show as minted plays as a silent, looping video of the same frames,
-with its first frame as the poster: Deathbed's minted GIF is 188 MB, and its video is about 3.5 MB.
+shows while it loads. A live work that looks just like its still can rest under it, like RED HERR1NG
+(1'M HERE): with `cover` in its entry, the frame shows the still while the work loads beneath it,
+then the work's own full-size image once that has loaded from where it was minted (the still's
+`full`, an https link). The picture lifts once someone clicks, taps, or tabs into the work, so the
+frame never waits on the servers the work loads from. A still that is small enough is served as the
+original file, in one size. A still can also load from where it was minted, with an https link as
+its `src`: five UNBECOMING owners chose a GIF version of their work, and those show that way,
+filling the square. A moving work too heavy to show as minted plays as a silent, looping video of
+the same frames, with its first frame as the poster: Deathbed's minted GIF is 188 MB, and its video
+is about 3.5 MB.
 
 ## Adding a work
 

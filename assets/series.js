@@ -3,6 +3,10 @@
    "Show another", above the frame beside "3 of 20", or a tap on a still or a moving work,
    steps to the next work in order and starts over after the last. Live works play in the frame
    itself, loaded from where they were minted; a tap there belongs to the work.
+   A live work that looks just like its still can rest under that picture (an entry's cover): the work
+   loads beneath it, and the picture lifts once someone clicks, taps, or tabs into the work, so the
+   frame never waits on the servers the work loads from. The picture starts as the still and
+   gives way to the work's own full-size image (its full) once that has loaded from where it was minted.
    A still can load from where it was minted too (an https link), like a GIF an owner chose.
    A moving work too heavy to show as minted plays as a silent, looping video of the same frames;
    a tap on it steps, as with a still.
@@ -34,11 +38,44 @@
     var note = noted && fig.parentNode ? fig.parentNode.querySelector(".media-note") : null;
     var words = document.querySelectorAll("[data-work]");
     var linked = !window.__PREVIEW__;
-    var img = null, i = 0;
+    var img = null, i = 0, lift = null;
 
     function place(node) {
       while (frame.firstChild) frame.removeChild(frame.firstChild);
       frame.appendChild(node);
+    }
+
+    /* the picture over a live work that rests: a click or tap lifts it and hands the work the keyboard;
+       the keyboard reaching the work (Tab) lifts it too */
+    function rest(f, s) {
+      function picture(src) {
+        var p = document.createElement("img");
+        p.className = "series-cover";
+        p.alt = "";
+        p.setAttribute("aria-hidden", "true");
+        p.width = s.w;
+        p.height = s.h;
+        p.referrerPolicy = "no-referrer";
+        p.addEventListener("click", function () { up(); f.focus(); });
+        p.src = src;
+        return p;
+      }
+      var c = picture(url(s.src));
+      frame.appendChild(c);
+      /* the full-size image takes the still's place only once it is ready to show */
+      if (s.full) {
+        var big = picture(s.full);
+        var swap = function () { if (c.parentNode) { frame.replaceChild(big, c); c = big; } };
+        if (big.decode) big.decode().then(swap, function () {}); else big.onload = swap;
+      }
+      function up() {
+        if (c.parentNode) c.parentNode.removeChild(c);
+        window.removeEventListener("blur", away);
+        lift = null;
+      }
+      function away() { setTimeout(function () { if (document.activeElement === f) up(); }, 0); }
+      window.addEventListener("blur", away);
+      lift = up;
     }
 
     function remote(d) { return /^https?:/.test(d.src || ""); }
@@ -58,6 +95,7 @@
 
     function show(k, follow) {
       var d = list[k];
+      if (lift) lift();
       if ((d.embed || remote(d)) && window.__PREVIEW__) {
         var ph = document.createElement("div");
         ph.className = "ph";
@@ -97,6 +135,7 @@
         if (d.allow) f.setAttribute("allow", d.allow);
         f.src = d.embed;
         place(f);
+        if (d.cover && d.still) rest(f, d.still);
         img = null;
       } else {
         if (!img) {
@@ -117,8 +156,8 @@
       for (var w = 0; w < words.length; w++) words[w].hidden = words[w].getAttribute("data-work") !== d.slug;
       if (pos) pos.textContent = (k + 1) + " of " + list.length;
       if (follow && linked && window.history && history.replaceState) history.replaceState(null, "", "#" + d.slug);
-      var n = list[(k + 1) % list.length];
-      if (n.src && n !== d && !(remote(n) && window.__PREVIEW__)) load(new Image(), n);
+      var n = list[(k + 1) % list.length], m = n.embed ? n.cover && n.still : n;
+      if (m && m.src && n !== d && !((n.embed || remote(m)) && window.__PREVIEW__)) load(new Image(), m);
       var e;
       try { e = new CustomEvent("series:change", { detail: { index: k } }); }
       catch (x) { e = document.createEvent("CustomEvent"); e.initCustomEvent("series:change", false, false, { index: k }); }

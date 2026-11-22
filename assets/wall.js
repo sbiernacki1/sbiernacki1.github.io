@@ -313,8 +313,8 @@
     if (!fig) return;
     var list = JSON.parse(fig.querySelector(".series-data").textContent);
     var base = fig.getAttribute("data-base") || "";
-    /* a moving work hangs as a light loop of its own, with its first frame as the still; a live work,
-       which has no still in the frame, hangs as the picture chosen for it (its still or its loop) */
+    /* a moving work hangs as a light loop of its own, with its first frame as the still; a live work
+       hangs as the picture chosen for it (its still or its loop) */
     var items = list.map(function (d, k) {
       var x = { t: d.title, src: base + (d.small || d.src || d.poster), w: d.w, h: d.h, idx: k };
       if (d.still) { x.src = base + d.still.src; x.w = d.still.w; x.h = d.still.h; }
