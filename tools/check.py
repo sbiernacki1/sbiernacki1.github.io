@@ -18,6 +18,8 @@ each problem it finds, or "All good."
   Versions  every page asks for the stylesheet and scripts with the same ?v= number
   Words     no page says Buy or gives a price, and none shows an email address
   Dashes    no file has more em dashes than it had at the last commit
+  Search    the front page's search data says only what the site says: the bio word for word, the
+            portrait, and the links listed under Social and Art on Elsewhere
 
 --never adds words that must never appear on the site, as a regular expression. Keep such words out
 of this file and out of the repository, which is public.
@@ -247,6 +249,31 @@ def check_dashes(files):
             say("Dashes", f"{f}: {now - was} new em dash{'es' if now - was > 1 else ''}; new text goes without them")
 
 
+def check_search(files):
+    if "index.html" not in files or "elsewhere/index.html" not in files:
+        return
+    home = soup("index.html")
+    blocks = home.find_all("script", type="application/ld+json")
+    if len(blocks) != 1:
+        say("Search", f"the front page has {len(blocks)} blocks of search data; it should have one")
+        return
+    try:
+        person = [g for g in json.loads(blocks[0].string)["@graph"] if g.get("@type") == "Person"][0]
+    except (ValueError, KeyError, IndexError, TypeError) as e:
+        say("Search", f"the front page's search data can't be read ({e})")
+        return
+    bio = home.find("p", class_="bio")
+    if bio is None or person.get("description") != bio.get_text():
+        say("Search", "the search data's description isn't the front page's bio, word for word")
+    image = person.get("image", "")
+    if not image.startswith(SITE) or not exists(urlparse(image).path):
+        say("Search", f"the search data's image isn't on the site: {image}")
+    listed = [a["href"] for s in soup("elsewhere/index.html").find_all("section", class_="group")
+              if s.get("aria-labelledby") in ("social", "art") for a in s.find_all("a", href=True)]
+    if person.get("sameAs") != listed:
+        say("Search", "the search data's links aren't the ones under Social and Art on Elsewhere, in order")
+
+
 def main(args):
     never = []
     while "--never" in args:
@@ -261,6 +288,7 @@ def main(args):
     check_versions(files)
     check_words(files, never)
     check_dashes(files)
+    check_search(files)
     for p in problems:
         print(p)
     pages = sum(f.endswith(".html") for f in files)
