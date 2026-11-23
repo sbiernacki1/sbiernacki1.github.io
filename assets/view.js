@@ -118,6 +118,45 @@
     try { full.focus({ preventScroll: true }); } catch (x) { full.focus(); }
   }
 
+  /* A live work that sets its size once, as it opens (an iframe with data-fit), would keep that first
+     size when Full screen gives it more room. So it opens at the size it has in Full screen, or no wider
+     than its pictures grow (data-fit="800"), and is scaled to fit its frame. Full screen then shows it at
+     its own size at once, with nothing reloaded. Its address waits in data-src until it has that size. */
+  var fitted = null;
+  function fit() {
+    var f = frame.querySelector("iframe[data-fit]");
+    if (!f) { fitted = null; return; }
+    if (!fitted || fitted.f !== f) {
+      var ar = parseFloat(getComputedStyle(stage).getPropertyValue("--arn")) || 1;
+      var strip = fig.querySelector(".strip");
+      var room = 28 + (strip ? strip.offsetHeight : 0) + acts.offsetHeight;
+      var sw = screen.width || window.innerWidth, sh = screen.height || window.innerHeight;
+      var w = Math.max(Math.min(sw, (sh - room) * ar), Math.min(sh, (sw - room) * ar));
+      var most = parseFloat(f.getAttribute("data-fit"));
+      if (most > 0) w = Math.min(w, most);
+      w = Math.round(Math.max(1, Math.min(w, 2400)));
+      f.style.maxWidth = "none";
+      f.style.width = w + "px";
+      f.style.height = Math.round(w / ar) + "px";
+      f.style.right = f.style.bottom = "auto";
+      f.style.margin = "0";
+      f.style.transformOrigin = "0 0";
+      fitted = { f: f, w: w, ar: ar };
+      if (!f.getAttribute("src") && f.getAttribute("data-src")) f.src = f.getAttribute("data-src");
+    }
+    scale();
+  }
+  function scale() {
+    if (!fitted || !fitted.f.isConnected) return;
+    var fw = frame.clientWidth, fh = frame.clientHeight;
+    var bw = Math.min(fw, fh * fitted.ar), bh = bw / fitted.ar;
+    fitted.f.style.left = (fw - bw) / 2 + "px";
+    fitted.f.style.top = (fh - bh) / 2 + "px";
+    fitted.f.style.transform = "scale(" + bw / fitted.w + ")";
+  }
+  if (window.ResizeObserver) new ResizeObserver(scale).observe(frame);
+  else window.addEventListener("resize", scale);
+
   full.addEventListener("click", enter);
   shut.addEventListener("click", leave);
   /* leaving full screen the browser's way (Esc, a swipe) brings the page back too */
@@ -130,7 +169,8 @@
     else if (e.key === "ArrowRight") { e.preventDefault(); step(1); }
     else if (e.key === "ArrowLeft") { e.preventDefault(); step(-1); }
   });
-  fig.addEventListener("series:change", sync);
+  fig.addEventListener("series:change", function () { fit(); sync(); });
   window.addEventListener("load", sync);
+  fit();
   sync();
 })();

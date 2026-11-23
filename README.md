@@ -66,7 +66,7 @@ and Playwright with its Chromium for the site's card.
 `.nojekyll` tells GitHub to serve the files as-is. `CNAME` holds the domain, so it stays set however
 the files are uploaded. `404.html` is the not-found page.
 
-Every page links to its stylesheet and scripts with `?v=18` at the end (`assets/site.css?v=18`). After
+Every page links to its stylesheet and scripts with `?v=19` at the end (`assets/site.css?v=19`). After
 changing any file in `assets` that ends in `.css` or `.js`, raise that number on every page, so
 browsers fetch the new files at once instead of reusing their copies of the old ones for up to ten
 minutes.
@@ -164,6 +164,17 @@ Live embed (inside the frame, `<div class="frame">`, on the work's page):
 
 Only Vestige needs `allow="microphone"`. If a work is a single self-contained file, put a copy in
 `/art/` and embed that instead: the page then makes no requests to anyone else's servers.
+
+Some live works set their size once, as they open, and never again: everything made with the same
+p5 tool as UNBECOMING, Untitled (For Jo), and RED HERR1NG (1'M HERE), which calls
+`createCanvas(windowWidth, windowHeight)` and has no `windowResized`. Full screen would leave such a
+work at its first size in the middle of the screen. So it opens at the size it has in Full screen and
+is scaled to fit its frame (`view.js`), and Full screen shows it at its own size at once, with nothing
+reloaded. Mark the iframe `data-fit`, with its address in `data-src` instead of `src`, and repeat the
+plain iframe in a `<noscript>` after it, as on the Untitled (For Jo) page. `data-fit="800"` keeps the
+work no wider than 800 pixels, for a work whose pictures stop growing there (UNBECOMING's GIFs are
+800 by 800), so it never opens with a margin around them. In a series, the entry's `fit` does the
+same: `"fit": 800`, or `"fit": true` for no limit.
 
 Still image (same spot): put the file in `/assets/works/` and use
 

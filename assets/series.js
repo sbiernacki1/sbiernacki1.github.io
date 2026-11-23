@@ -7,6 +7,8 @@
    loads beneath it, and the picture lifts once someone clicks, taps, or tabs into the work, so the
    frame never waits on the servers the work loads from. The picture starts as the still and
    gives way to the work's own full-size image (its full) once that has loaded from where it was minted.
+   A live work that sets its size once, as it opens (an entry's fit), opens at the size it has in Full
+   screen and is scaled to fit the frame (view.js), so Full screen shows it at its own size.
    A still can load from where it was minted too (an https link), like a GIF an owner chose.
    A moving work too heavy to show as minted plays as a silent, looping video of the same frames;
    a tap on it steps, as with a still.
@@ -133,7 +135,11 @@
         f.title = name && d.title.indexOf(name) !== 0 ? name + ", " + d.title : d.title;
         f.setAttribute("referrerpolicy", "no-referrer");
         if (d.allow) f.setAttribute("allow", d.allow);
-        f.src = d.embed;
+        /* a work that sets its size once, as it opens, waits for view.js to give it its Full screen size */
+        if (d.fit) {
+          f.setAttribute("data-fit", d.fit === true ? "" : String(d.fit));
+          f.setAttribute("data-src", d.embed);
+        } else f.src = d.embed;
         place(f);
         if (d.cover && d.still) rest(f, d.still);
         img = null;
