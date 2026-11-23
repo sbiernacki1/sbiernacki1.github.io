@@ -15,8 +15,9 @@ The pages are plain files, edited directly: nothing generates them. To change th
 
 - `check.py` checks the whole site before a commit: every file a page asks for is here, the front
   page's list and wall agree, Previous and Next run in order, every work page has its own share card,
-  the `?v=` numbers match, no page says Buy, gives a price or shows an email address, no new text
-  has an em dash, and the front page's search data still matches the site.
+  the `?v=` numbers match, no page says Buy or gives a price, no page but Elsewhere shows an email
+  address (and Elsewhere shows only the inquiry address), no new text has an em dash, and the front
+  page's search data still matches the site.
 - `share_card.py` draws a work's share card. `share_card.py --check` shows whether a machine draws
   them exactly as the site's were drawn.
 - `site_card.py` draws the site's own share card, from `site_card.html`.
@@ -240,6 +241,14 @@ stylesheet stands it to the right of the three sections, level with Social. The 
 black-and-white photo at two widths, saved without the camera's details (no date, place or device). To
 change the photo, save the new crop at those two names and sizes, again without the camera's details, and
 put the new photo's year in the caption.
+
+## The inquiry address
+
+Elsewhere lists stephen@stephenbiernacki.com under Email, as Inquiries. It is an alias: Namecheap
+forwards it to Stephen's own inbox (Domain List, then Manage, then Redirect Email), so his own address
+stays off the site. It appears on Elsewhere and nowhere else, and `check.py` lets no other address
+onto any page. If the alias starts drawing spam, add a new one in Namecheap, put it on Elsewhere and
+in `INQUIRIES` at the top of `check.py`, then delete the old one.
 
 ## Search data
 

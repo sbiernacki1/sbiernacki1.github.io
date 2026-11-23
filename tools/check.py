@@ -16,10 +16,12 @@ each problem it finds, or "All good."
             description and the day's bar under the name; every other page asks for the site's
             card, assets/og.png?v=N
   Versions  every page asks for the stylesheet and scripts with the same ?v= number
-  Words     no page says Buy or gives a price, and none shows an email address
+  Words     no page says Buy or gives a price, and no page shows an email address, except that
+            Elsewhere shows the inquiry address (INQUIRIES, below)
   Dashes    no file has more em dashes than it had at the last commit
   Search    the front page's search data says only what the site says: the bio word for word, the
-            portrait, and the links listed under Social and Art on Elsewhere
+            portrait, and the profiles listed under Social and Art on Elsewhere (every link there
+            but the email address)
 
 --never adds words that must never appear on the site, as a regular expression. Keep such words out
 of this file and out of the repository, which is public.
@@ -36,7 +38,8 @@ from PIL import Image
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE = "https://stephenbiernacki.com/"
-TEXT = (".html", ".css", ".js", ".md", ".json", ".txt", ".svg", ".xml")
+INQUIRIES = "stephen@stephenbiernacki.com"  # forwards to Stephen; the only address the site shows
+TEXT =(".html", ".css", ".js", ".md", ".json", ".txt", ".svg", ".xml")
 problems = []
 
 
@@ -228,13 +231,16 @@ def check_versions(files):
 
 def check_words(files, never):
     pats = [(r"\bbuy\b", "Buy: links say View"), (r"\bprices?\b", "a price"),
-            (r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}", "an email address"), (r"mailto:", "an email link")]
+            (r"[A-Za-z0-9._%+-]+@[A-Za-z0-9-]+(?:\.[A-Za-z0-9-]+)*\.[A-Za-z]{2,}", "an email address"),
+            (r"mailto:[^\"'\s>]*", "an email link")]
     pats += [(p, "a word that must never appear") for p in never]
     for f in files:
         if f.endswith(".html"):
             h = read(f)
             for pat, what in pats:
                 for m in re.finditer(pat, h, re.I):
+                    if f == "elsewhere/index.html" and m.group(0).lower() in (INQUIRIES, "mailto:" + INQUIRIES):
+                        continue
                     say("Words", f"{f}: {what}, near {h[max(0, m.start() - 40):m.end() + 40]!r}")
 
 
@@ -269,7 +275,8 @@ def check_search(files):
     if not image.startswith(SITE) or not exists(urlparse(image).path):
         say("Search", f"the search data's image isn't on the site: {image}")
     listed = [a["href"] for s in soup("elsewhere/index.html").find_all("section", class_="group")
-              if s.get("aria-labelledby") in ("social", "art") for a in s.find_all("a", href=True)]
+              if s.get("aria-labelledby") in ("social", "art") for a in s.find_all("a", href=True)
+              if not a["href"].startswith("mailto:")]
     if person.get("sameAs") != listed:
         say("Search", "the search data's links aren't the ones under Social and Art on Elsewhere, in order")
 
